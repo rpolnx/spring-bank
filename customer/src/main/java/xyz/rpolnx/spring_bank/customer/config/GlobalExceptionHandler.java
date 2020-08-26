@@ -1,13 +1,19 @@
 package xyz.rpolnx.spring_bank.customer.config;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import xyz.rpolnx.spring_bank.customer.exceptions.BadRequestException;
+import xyz.rpolnx.spring_bank.customer.exceptions.ConflictException;
 import xyz.rpolnx.spring_bank.customer.exceptions.NotFoundException;
 
+import javax.validation.UnexpectedTypeException;
 import java.sql.SQLException;
 
 import static org.springframework.http.HttpStatus.*;
@@ -17,10 +23,22 @@ import static org.springframework.http.HttpStatus.*;
 @Log4j2
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler
+    @ExceptionHandler({BadRequestException.class})
     @ResponseStatus(BAD_REQUEST)
-    public ExceptionWrapper handleException(BadRequestException ex) {
-        return new ExceptionWrapper(NOT_FOUND, ex.getMessage());
+    public ExceptionWrapper handleBadRequestException(Exception ex) {
+        return new ExceptionWrapper(BAD_REQUEST, ex.getLocalizedMessage());
+    }
+
+    @ExceptionHandler({HttpMessageNotReadableException.class})
+    @ResponseStatus(BAD_REQUEST)
+    public ExceptionWrapper handleBadRequestException(HttpMessageNotReadableException ex) {
+        return new ExceptionWrapper(BAD_REQUEST, ex.getLocalizedMessage());
+    }
+
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    @ResponseStatus(BAD_REQUEST)
+    public ExceptionWrapper handleBadRequestException(MethodArgumentNotValidException ex) {
+        return new ExceptionWrapper(BAD_REQUEST, ex.getBindingResult().getAllErrors());
     }
 
     @ExceptionHandler
@@ -30,10 +48,28 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
+    @ResponseStatus(NOT_FOUND)
+    public ExceptionWrapper handleException(EmptyResultDataAccessException ex) {
+        return new ExceptionWrapper(NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(CONFLICT)
+    public ExceptionWrapper handleException(ConflictException ex) {
+        return new ExceptionWrapper(CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler
     @ResponseStatus(UNPROCESSABLE_ENTITY)
     public ExceptionWrapper handleException(SQLException ex) {
         log.error("Sql exception: ", ex);
 
+        return new ExceptionWrapper(UNPROCESSABLE_ENTITY, ex.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(UNPROCESSABLE_ENTITY)
+    public ExceptionWrapper handleException(UnexpectedTypeException ex) {
         return new ExceptionWrapper(UNPROCESSABLE_ENTITY, ex.getMessage());
     }
 
