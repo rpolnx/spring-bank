@@ -1,4 +1,4 @@
-package xyz.rpolnx.spring_bank.customer.repository;
+package xyz.rpolnx.spring_bank.customer.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
