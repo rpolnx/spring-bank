@@ -2,6 +2,7 @@ package xyz.rpolnx.spring_bank.customer.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import xyz.rpolnx.spring_bank.customer.exceptions.ConflictException;
 import xyz.rpolnx.spring_bank.customer.exceptions.NotFoundException;
 import xyz.rpolnx.spring_bank.customer.external.ClientPublisher;
 import xyz.rpolnx.spring_bank.customer.external.ClientRepository;
@@ -11,6 +12,7 @@ import xyz.rpolnx.spring_bank.customer.service.ClientService;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,6 +20,8 @@ import java.util.stream.Collectors;
 public class ClientServiceImpl implements ClientService {
     private final ClientRepository repository;
     private final ClientPublisher publisher;
+
+    private static final int MAX_SCORE_NUMBER = 10;
 
     @Override
     public List<ClientDTO> getAll() {
@@ -36,7 +40,16 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional
     public ClientDTO create(ClientDTO client) {
-        Client entity = new Client(client.getDocumentNumber(), client.getFullName(), client.getPersonType(), client.getScore());
+
+        Optional<Client> exists = repository.findById(client.getDocumentNumber());
+
+        if (exists.isPresent()) {
+            throw new ConflictException("Duplicated user");
+        }
+
+        int score = (int) (Math.random() * MAX_SCORE_NUMBER);
+
+        Client entity = new Client(client.getDocumentNumber(), client.getFullName(), client.getPersonType(), score);
 
         Client created = repository.save(entity);
 
