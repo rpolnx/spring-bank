@@ -1,6 +1,8 @@
 package xyz.rpolnx.spring_bank.customer.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,14 +25,16 @@ import xyz.rpolnx.spring_bank.customer.model.dto.ClientDTO;
 import xyz.rpolnx.spring_bank.customer.model.entity.Client;
 import xyz.rpolnx.spring_bank.customer.service.impl.ClientServiceImpl;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -70,7 +74,7 @@ public class ClientControllerTest {
     @SneakyThrows
     @Test
     @DisplayName("When getting client, should return 200 and client list")
-    public void getAllUsers() {
+    public void getAllClients() {
         List<Client> clients = ClientMock.generateClients(5, 10);
 
         when(repository.findAll()).thenReturn(clients);
@@ -89,7 +93,7 @@ public class ClientControllerTest {
     @SneakyThrows
     @Test
     @DisplayName("When get single client, should return 200 and client")
-    public void getUser() {
+    public void getClient() {
         String id = "12345678910";
 
         Client client = new Client(id, "Client", PersonType.PF, 7);
@@ -108,7 +112,7 @@ public class ClientControllerTest {
     @SneakyThrows
     @Test
     @DisplayName("When get single client and not found, should return 404")
-    public void notFoundUser() {
+    public void notFoundClient() {
         String id = "12345678910";
 
         when(repository.findById(id)).thenReturn(Optional.empty());
@@ -126,7 +130,7 @@ public class ClientControllerTest {
     @SneakyThrows
     @Test
     @DisplayName("When creating client, should return 200 and created client id")
-    public void createUser() {
+    public void createClient() {
 
         ClientDTO request = new ClientDTO("01234567891", "Client", PersonType.PF, 2);
         Client client = new Client("01234567891", "Client", PersonType.PF, 2);
@@ -147,7 +151,7 @@ public class ClientControllerTest {
     @SneakyThrows
     @Test
     @DisplayName("When creating an existing document number, should return 200 and created client id")
-    public void createDuplicatedUser() {
+    public void createDuplicatedClient() {
 
         ClientDTO request = new ClientDTO("01234567891", "Client", PersonType.PF, 2);
         Client client = new Client("01234567891", "Client", PersonType.PF, 2);
@@ -164,13 +168,13 @@ public class ClientControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse().getContentAsString();
 
-        assertTrue(message.contains("Duplicated user"));
+        assertTrue(message.contains("Duplicated client"));
     }
 
     @SneakyThrows
     @Test
     @DisplayName("When updating an existing document number, should modify only content and return 204 status")
-    public void updateDuplicatedUser() {
+    public void updateDuplicatedClient() {
 
         String id = "98765432101";
 
@@ -185,6 +189,166 @@ public class ClientControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
+    }
+
+    @SneakyThrows
+    @Test
+    @DisplayName("When creating an existing document number, should return 200 and created client id")
+    public void createClientWithEmptyBody() {
+        String message = this.request.perform(post("/clients")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse().getContentAsString();
+
+        assertTrue(message.contains("Required request body is missing"));
+    }
+
+    @SneakyThrows
+    @Test
+    @DisplayName("When creating client with wrong listed enum, should return unprocessable entity with message")
+    public void createClientWithWrongPersonType() {
+        ClientDTO request = new ClientDTO("abc", "Client", PersonType.PJ, 2);
+        byte[] content = mapper.writeValueAsBytes(request);
+
+        ObjectNode node = (ObjectNode) mapper.readTree(content);
+        node.put("personType", "NO_ENUM");
+
+        byte[] requestContent = mapper.writeValueAsBytes(node);
+
+        String message = this.request.perform(post("/clients")
+                .content(requestContent)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse().getContentAsString();
+
+        ObjectNode exceptionWrapper = mapper.readValue(message, ObjectNode.class);
+        assertNotNull(exceptionWrapper);
+        assertTrue(exceptionWrapper.at("/message").textValue().contains("JSON parse error: Cannot deserialize value"));
+        assertTrue(exceptionWrapper.at("/message").textValue().contains("not one of the values accepted for Enum class: [PJ, PF];"));
+    }
+
+    @SneakyThrows
+    @Test
+    @DisplayName("When creating client with wrong type, should return unprocessable entity with message")
+    public void createClientWithTypeError() {
+        ClientDTO request = new ClientDTO("01234567891", "Client", PersonType.PJ, 2);
+        byte[] content = mapper.writeValueAsBytes(request);
+
+        ObjectNode node = (ObjectNode) mapper.readTree(content);
+        ArrayNode arrayNode = mapper.createArrayNode();
+        node.set("fullName", arrayNode);
+
+        byte[] requestContent = mapper.writeValueAsBytes(node);
+
+        String message = this.request.perform(post("/clients")
+                .content(requestContent)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse().getContentAsString();
+
+        ObjectNode exceptionWrapper = mapper.readValue(message, ObjectNode.class);
+        assertNotNull(exceptionWrapper);
+        assertTrue(exceptionWrapper.at("/message").textValue().contains("fullName"));
+        assertTrue(exceptionWrapper.at("/message").textValue().contains("Cannot deserialize instance"));
+    }
+
+    @SneakyThrows
+    @Test
+    @DisplayName("When creating client with wrong document number pattern, should return bad request with message")
+    public void createClientWithWrongPatternId() {
+        ClientDTO request = new ClientDTO("56789", "Client", PersonType.PF, 2);
+
+        String message = this.request.perform(post("/clients")
+                .content(mapper.writeValueAsBytes(request))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse().getContentAsString();
+
+        ObjectNode exceptionWrapper = mapper.readValue(message, ObjectNode.class);
+        assertNotNull(exceptionWrapper);
+        assertTrue(exceptionWrapper.at("/specificErrors/0/defaultMessage").textValue()
+                .contains("must match \"^\\d{11,14}$\""));
+        assertEquals("documentNumber", exceptionWrapper.at("/specificErrors/0/field").textValue());
+    }
+
+    @SneakyThrows
+    @Test
+    @DisplayName("When creating client with wrong document number pattern, should return bad request with message")
+    public void createClientWithWrongSizeOfPJ() {
+        ClientDTO request = new ClientDTO("123456789101", "Client", PersonType.PJ, 2);
+
+        String message = this.request.perform(post("/clients")
+                .content(mapper.writeValueAsBytes(request))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse().getContentAsString();
+
+        ObjectNode exceptionWrapper = mapper.readValue(message, ObjectNode.class);
+        assertNotNull(exceptionWrapper);
+        assertEquals("PJ must has document size of 14", exceptionWrapper.at("/message").textValue());
+    }
+
+    @SneakyThrows
+    @Test
+    @DisplayName("When creating client and got sql problem, should return internal server error")
+    public void createClientGotSQLProblem() {
+        ClientDTO request = new ClientDTO("12345678910", "Client", PersonType.PF, 2);
+
+        given(repository.save(any(Client.class))).willAnswer(invocation -> {
+            throw new SQLException("SQL Error");
+        });
+
+        String message = this.request.perform(post("/clients")
+                .content(mapper.writeValueAsBytes(request))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse().getContentAsString();
+
+        ObjectNode exceptionWrapper = mapper.readValue(message, ObjectNode.class);
+        assertNotNull(exceptionWrapper);
+        assertEquals("SQL Error", exceptionWrapper.at("/message").textValue());
+    }
+
+    @SneakyThrows
+    @Test
+    @DisplayName("When creating client and got unexpected problem, should return internal server error")
+    public void createClientGotUnexpectedProblem() {
+        ClientDTO request = new ClientDTO("12345678910", "Client", PersonType.PF, 2);
+
+        given(repository.save(any(Client.class))).willAnswer(invocation -> {
+            throw new Exception("Unexpected error");
+        });
+
+        String message = this.request.perform(post("/clients")
+                .content(mapper.writeValueAsBytes(request))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse().getContentAsString();
+
+        ObjectNode exceptionWrapper = mapper.readValue(message, ObjectNode.class);
+        assertNotNull(exceptionWrapper);
+        assertEquals("Unexpected error", exceptionWrapper.at("/message").textValue());
     }
 
 
