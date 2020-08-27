@@ -1,13 +1,14 @@
 package xyz.rpolnx.spring_bank.customer.model.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import java.time.LocalDateTime;
 
 @Data
+@MappedSuperclass
 public abstract class BaseEntity {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
