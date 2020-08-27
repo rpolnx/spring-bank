@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import xyz.rpolnx.spring_bank.customer.exceptions.BadRequestException;
 import xyz.rpolnx.spring_bank.customer.exceptions.ConflictException;
@@ -87,12 +88,29 @@ public class ClientServiceImplTest {
     }
 
     @Test
-    @DisplayName("When updating client, should not throw exception")
-    public void shouldUpdateClient() {
-        String documentNumber = "1234";
+    @DisplayName("When updating an existing client, should edit it")
+    public void shouldUpdateExistingClient() {
+        String documentNumber = "currentEdit";
 
-        ClientDTO request = new ClientDTO("not usable", "", PF, 8);
-        Client client = new Client("1234", "", PF, 8);
+        Client oldClient = new Client("currentEdit", "old name", PF, 2);
+
+        when(repository.findById("currentEdit")).thenReturn(Optional.of(oldClient));
+
+        Client newClient = new Client("currentEdit", "edit", PJ, 8);
+
+        ClientDTO request = new ClientDTO("01234567891012", "edit", PJ, 8);
+        assertDoesNotThrow(() -> service.update(request, documentNumber));
+        verify(repository, times(1)).save(newClient);
+    }
+
+    @Test
+    @DisplayName("When updating with unused document number, should create it")
+    public void shouldCreateWhenThereIsNoReferenceWithThisDocumentNumber() {
+        String documentNumber = "98765432101";
+
+        ClientDTO request = new ClientDTO("12345678910", "new user", PF, 8);
+        Client client = new Client("98765432101", "new user", PF, 8);
+        when(repository.findById(documentNumber)).thenReturn(Optional.empty());
 
         assertDoesNotThrow(() -> service.update(request, documentNumber));
         verify(repository, times(1)).save(client);

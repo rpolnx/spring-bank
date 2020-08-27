@@ -62,8 +62,16 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public void update(ClientDTO client, String documentNumber) {
-        Client entity = new Client(documentNumber, client.getFullName(), client.getPersonType(), client.getScore());
+    @Transactional
+    public void update(ClientDTO dto, String documentNumber) {
+        dto.validate();
+
+        Client entity = repository.findById(documentNumber)
+                .orElse(new Client(documentNumber, dto.getFullName(), dto.getPersonType(), dto.getScore()));
+
+        entity.setFullName(dto.getFullName());
+        entity.setPersonType(dto.getPersonType());
+        entity.setScore(dto.getScore());
 
         repository.save(entity);
     }
