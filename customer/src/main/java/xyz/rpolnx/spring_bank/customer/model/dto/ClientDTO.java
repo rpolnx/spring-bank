@@ -4,10 +4,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import xyz.rpolnx.spring_bank.customer.exceptions.BadRequestException;
 import xyz.rpolnx.spring_bank.customer.model.PersonType;
 import xyz.rpolnx.spring_bank.customer.model.entity.Client;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
@@ -34,7 +37,11 @@ public class ClientDTO {
     }
 
     public void validate() {
-        this.getPersonType().verifyDocumentSize(this.getDocumentNumber());
+        int documentSize = this.getPersonType().getDocumentSize();
+
+        if (documentNumber.length() != documentSize) {
+            throw new BadRequestException(personType + " must has document size of " + documentSize);
+        }
     }
 
     public static ClientDTO of(Client client) {
