@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.With;
 import xyz.rpolnx.spring_bank.customer.exceptions.BadRequestException;
 import xyz.rpolnx.spring_bank.customer.model.PersonType;
 import xyz.rpolnx.spring_bank.customer.model.entity.Client;
@@ -21,6 +22,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 public class ClientDTO {
     @NotNull
     @Pattern(regexp = "^\\d{11,14}$")
+    @With
     private String documentNumber;
     @NotNull
     @NotEmpty
@@ -42,6 +44,10 @@ public class ClientDTO {
         if (documentNumber.length() != documentSize) {
             throw new BadRequestException(personType + " must has document size of " + documentSize);
         }
+    }
+
+    public ClientDTO onlyDocumentNumber() {
+        return new ClientDTO().withDocumentNumber(this.documentNumber);
     }
 
     public static ClientDTO of(Client client) {

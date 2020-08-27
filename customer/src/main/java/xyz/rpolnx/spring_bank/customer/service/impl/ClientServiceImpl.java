@@ -58,7 +58,7 @@ public class ClientServiceImpl implements ClientService {
 
         publisher.handleClientCreation(clientDTO);
 
-        return clientDTO;
+        return clientDTO.onlyDocumentNumber();
     }
 
     @Override
