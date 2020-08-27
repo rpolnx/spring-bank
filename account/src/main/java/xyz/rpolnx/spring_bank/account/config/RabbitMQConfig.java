@@ -3,7 +3,7 @@ package xyz.rpolnx.spring_bank.account.config;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,11 +19,6 @@ public class RabbitMQConfig {
 
     @Value("${service-exchange-name}")
     private String servicesExchange;
-
-    @Value("${routing-credit-card}")
-    private String creditCardRoutingKey;
-    @Value("${routing-key-overdraft}")
-    private String overdraftRoutingKey;
 
     @Bean
     public Queue customerQueue() {
@@ -41,21 +36,19 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public TopicExchange accountExchange() {
-        return new TopicExchange(servicesExchange);
+    public FanoutExchange accountExchange() {
+        return new FanoutExchange(servicesExchange);
     }
 
     @Bean
-    public Binding creditCardBinding(TopicExchange servicesExchange, Queue creditCardQueue) {
+    public Binding creditCardBinding(FanoutExchange servicesExchange, Queue creditCardQueue) {
         return BindingBuilder.bind(creditCardQueue)
-                .to(servicesExchange)
-                .with(creditCardRoutingKey);
+                .to(servicesExchange);
     }
 
     @Bean
-    public Binding overdraftBinding(TopicExchange servicesExchange, Queue overdraftQueue) {
+    public Binding overdraftBinding(FanoutExchange servicesExchange, Queue overdraftQueue) {
         return BindingBuilder.bind(overdraftQueue)
-                .to(servicesExchange)
-                .with(overdraftRoutingKey);
+                .to(servicesExchange);
     }
 }
