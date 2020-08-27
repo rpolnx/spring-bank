@@ -1,7 +1,7 @@
 package xyz.rpolnx.spring_bank.customer.external;
 
-import xyz.rpolnx.spring_bank.customer.model.dto.ClientDTO;
+import xyz.rpolnx.spring_bank.customer.model.dto.ClientEvent;
 
 public interface ClientPublisher {
-    void handleClientCreation(ClientDTO clientDTO);
+    void handleClientCreation(ClientEvent clientDTO);
 }

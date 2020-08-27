@@ -1,10 +1,7 @@
 package xyz.rpolnx.spring_bank.customer.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.With;
+import lombok.*;
 import xyz.rpolnx.spring_bank.common.exceptions.BadRequestException;
 import xyz.rpolnx.spring_bank.customer.model.PersonType;
 import xyz.rpolnx.spring_bank.customer.model.entity.Client;
@@ -29,6 +26,7 @@ public class ClientDTO {
     private String fullName;
     @NotNull
     private PersonType personType;
+    @With
     private Integer score;
 
     public ClientDTO(Client client) {
@@ -36,6 +34,12 @@ public class ClientDTO {
         this.fullName = client.getFullName();
         this.personType = client.getPersonType();
         this.score = client.getScore();
+    }
+
+    public ClientDTO(String documentNumber, String fullName, PersonType personType) {
+        this.documentNumber = documentNumber;
+        this.fullName = fullName;
+        this.personType = personType;
     }
 
     public void validate() {
@@ -46,8 +50,8 @@ public class ClientDTO {
         }
     }
 
-    public ClientDTO onlyDocumentNumber() {
-        return new ClientDTO().withDocumentNumber(this.documentNumber);
+    public static ClientDTO withOnlyDocumentNumber(String documentNumber) {
+        return new ClientDTO().withDocumentNumber(documentNumber);
     }
 
     public static ClientDTO of(Client client) {

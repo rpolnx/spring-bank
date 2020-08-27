@@ -7,6 +7,7 @@ import xyz.rpolnx.spring_bank.common.exceptions.NotFoundException;
 import xyz.rpolnx.spring_bank.customer.external.ClientPublisher;
 import xyz.rpolnx.spring_bank.customer.external.ClientRepository;
 import xyz.rpolnx.spring_bank.customer.model.dto.ClientDTO;
+import xyz.rpolnx.spring_bank.customer.model.dto.ClientEvent;
 import xyz.rpolnx.spring_bank.customer.model.entity.Client;
 import xyz.rpolnx.spring_bank.customer.service.ClientService;
 
@@ -54,11 +55,11 @@ public class ClientServiceImpl implements ClientService {
 
         Client created = repository.save(entity);
 
-        ClientDTO clientDTO = ClientDTO.of(created);
+        ClientEvent event = ClientEvent.of(created, ClientEvent.Type.CREATION);
 
-        publisher.handleClientCreation(clientDTO);
+        publisher.handleClientCreation(event);
 
-        return clientDTO.onlyDocumentNumber();
+        return ClientDTO.withOnlyDocumentNumber(created.getDocumentNumber());
     }
 
     @Override
@@ -73,7 +74,11 @@ public class ClientServiceImpl implements ClientService {
         entity.setPersonType(dto.getPersonType());
         entity.setScore(dto.getScore());
 
-        repository.save(entity);
+        Client updated = repository.save(entity);
+
+        ClientEvent event = ClientEvent.of(updated, ClientEvent.Type.UPDATE);
+
+        publisher.handleClientCreation(event);
     }
 
     @Override

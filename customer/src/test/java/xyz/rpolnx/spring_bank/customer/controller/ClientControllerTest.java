@@ -22,6 +22,7 @@ import xyz.rpolnx.spring_bank.customer.external.ClientRepository;
 import xyz.rpolnx.spring_bank.customer.mocks.ClientMock;
 import xyz.rpolnx.spring_bank.customer.model.PersonType;
 import xyz.rpolnx.spring_bank.customer.model.dto.ClientDTO;
+import xyz.rpolnx.spring_bank.customer.model.dto.ClientEvent;
 import xyz.rpolnx.spring_bank.customer.model.entity.Client;
 import xyz.rpolnx.spring_bank.customer.service.impl.ClientServiceImpl;
 
@@ -131,8 +132,9 @@ public class ClientControllerTest {
     @DisplayName("When creating client, should return 200 and created client id")
     public void createClient() {
 
-        ClientDTO request = new ClientDTO("01234567891", "Client", PersonType.PF, 2);
-        Client client = new Client("01234567891", "Client", PersonType.PF, 2);
+        ClientDTO request = new ClientDTO("01234567891", "Client", PersonType.PF);
+        Client client = new Client("01234567891", "Client", PersonType.PF, 8);
+        ClientEvent event = ClientEvent.of(client, ClientEvent.Type.CREATION);
 
         when(repository.findById(anyString())).thenReturn(Optional.empty());
         when(repository.save(any(Client.class))).thenReturn(client);
@@ -144,9 +146,9 @@ public class ClientControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(mapper.writeValueAsString(ClientDTO.of(client).onlyDocumentNumber())));
+                .andExpect(content().json(mapper.writeValueAsString(ClientDTO.withOnlyDocumentNumber(client.getDocumentNumber()))));
 
-        verify(publisher).handleClientCreation(request);
+        verify(publisher).handleClientCreation(event);
     }
 
     @SneakyThrows
@@ -154,7 +156,7 @@ public class ClientControllerTest {
     @DisplayName("When creating an existing document number, should return 200 and created client id")
     public void createDuplicatedClient() {
 
-        ClientDTO request = new ClientDTO("01234567891", "Client", PersonType.PF, 2);
+        ClientDTO request = new ClientDTO("01234567891", "Client", PersonType.PF);
         Client client = new Client("01234567891", "Client", PersonType.PF, 2);
 
         when(repository.findById(anyString())).thenReturn(Optional.of(client));
@@ -178,10 +180,12 @@ public class ClientControllerTest {
 
         String id = "98765432101";
 
-        ClientDTO request = new ClientDTO("01234567891", "Client", PersonType.PF, 2);
+        ClientDTO request = new ClientDTO("01234567891", "Client", PersonType.PF, 7);
         Client client = new Client("01234567891", "Client", PersonType.PF, 2);
+        Client newClient = new Client("01234567891", "Client", PersonType.PF, 7);
 
         when(repository.findById(anyString())).thenReturn(Optional.of(client));
+        when(repository.save(newClient)).thenReturn(client);
 
         this.request.perform(put("/clients/{id}", id)
                 .content(mapper.writeValueAsBytes(request))
@@ -189,6 +193,10 @@ public class ClientControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
+
+        ClientEvent event = ClientEvent.of(newClient, ClientEvent.Type.UPDATE);
+
+        verify(publisher).handleClientCreation(event);
     }
 
     @SneakyThrows
@@ -223,7 +231,7 @@ public class ClientControllerTest {
     @Test
     @DisplayName("When creating client with wrong listed enum, should return unprocessable entity with message")
     public void createClientWithWrongPersonType() {
-        ClientDTO request = new ClientDTO("abc", "Client", PersonType.PJ, 2);
+        ClientDTO request = new ClientDTO("abc", "Client", PersonType.PJ);
         byte[] content = mapper.writeValueAsBytes(request);
 
         ObjectNode node = (ObjectNode) mapper.readTree(content);
@@ -250,7 +258,7 @@ public class ClientControllerTest {
     @Test
     @DisplayName("When creating client with wrong type, should return unprocessable entity with message")
     public void createClientWithTypeError() {
-        ClientDTO request = new ClientDTO("01234567891", "Client", PersonType.PJ, 2);
+        ClientDTO request = new ClientDTO("01234567891", "Client", PersonType.PJ);
         byte[] content = mapper.writeValueAsBytes(request);
 
         ObjectNode node = (ObjectNode) mapper.readTree(content);
@@ -278,7 +286,7 @@ public class ClientControllerTest {
     @Test
     @DisplayName("When creating client with wrong document number pattern, should return bad request with message")
     public void createClientWithWrongPatternId() {
-        ClientDTO request = new ClientDTO("56789", "Client", PersonType.PF, 2);
+        ClientDTO request = new ClientDTO("56789", "Client", PersonType.PF);
 
         String message = this.request.perform(post("/clients")
                 .content(mapper.writeValueAsBytes(request))
@@ -300,7 +308,7 @@ public class ClientControllerTest {
     @Test
     @DisplayName("When creating client with wrong document number pattern, should return bad request with message")
     public void createClientWithWrongSizeOfPJ() {
-        ClientDTO request = new ClientDTO("123456789101", "Client", PersonType.PJ, 2);
+        ClientDTO request = new ClientDTO("123456789101", "Client", PersonType.PJ);
 
         String message = this.request.perform(post("/clients")
                 .content(mapper.writeValueAsBytes(request))
@@ -320,7 +328,7 @@ public class ClientControllerTest {
     @Test
     @DisplayName("When creating client and got sql problem, should return internal server error")
     public void createClientGotSQLProblem() {
-        ClientDTO request = new ClientDTO("12345678910", "Client", PersonType.PF, 2);
+        ClientDTO request = new ClientDTO("12345678910", "Client", PersonType.PF);
 
         given(repository.save(any(Client.class))).willAnswer(invocation -> {
             throw new SQLException("SQL Error");
@@ -344,7 +352,7 @@ public class ClientControllerTest {
     @Test
     @DisplayName("When creating client and got unexpected problem, should return internal server error")
     public void createClientGotUnexpectedProblem() {
-        ClientDTO request = new ClientDTO("12345678910", "Client", PersonType.PF, 2);
+        ClientDTO request = new ClientDTO("12345678910", "Client", PersonType.PF);
 
         given(repository.save(any(Client.class))).willAnswer(invocation -> {
             throw new Exception("Unexpected error");

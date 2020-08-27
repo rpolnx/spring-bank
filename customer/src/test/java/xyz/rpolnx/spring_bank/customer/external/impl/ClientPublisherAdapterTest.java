@@ -11,6 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 import xyz.rpolnx.spring_bank.customer.model.dto.ClientDTO;
+import xyz.rpolnx.spring_bank.customer.model.dto.ClientEvent;
+import xyz.rpolnx.spring_bank.customer.model.entity.Client;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,13 +39,15 @@ public class ClientPublisherAdapterTest {
         ReflectionTestUtils.setField(adapter, "queue", "customer-queue");
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
 
-        ClientDTO request = new ClientDTO("123", "Full Name", PJ, 10);
+        Client client = new Client("123", "Full Name", PJ, 10);
+
+        ClientEvent request = ClientEvent.of(client, ClientEvent.Type.CREATION);
 
         doNothing().when(amqpTemplate).convertAndSend(anyString(), captor.capture());
 
         assertDoesNotThrow(() -> adapter.handleClientCreation(request));
 
-        ClientDTO actual = mapper.readValue(captor.getValue(), ClientDTO.class);
+        ClientEvent actual = mapper.readValue(captor.getValue(), ClientEvent.class);
 
         assertEquals(request, actual);
     }
