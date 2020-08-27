@@ -2,6 +2,7 @@
 <configuration>
 
     <property name="LOGS" value="./logs"/>
+    <springProperty scope="context" name="app_name" source="application.name" />
 
     <appender name="pretty-console"
               class="ch.qos.logback.core.ConsoleAppender">
@@ -12,20 +13,16 @@
         </layout>
     </appender>
 
-    <appender name="roll-by-time-and-size"
-              class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOGS}/spring-boot-logger.log</file>
-        <encoder
-                class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+    <appender name="roll-by-time-and-size" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/${app_name}.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
         </encoder>
 
         <!-- rollover daily and when the file reaches 10 MegaBytes -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOGS}/archived/spring-boot-logger-%d{yyyy-MM-dd}.%i.log
-            </fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+            <fileNamePattern>${LOGS}/archived/${app_name}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
