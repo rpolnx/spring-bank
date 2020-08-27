@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import xyz.rpolnx.spring_bank.account.external.AccountPublisher;
 import xyz.rpolnx.spring_bank.account.external.AccountRepository;
 import xyz.rpolnx.spring_bank.account.model.dto.AccountEvent;
@@ -13,7 +14,6 @@ import xyz.rpolnx.spring_bank.account.model.enums.AccountStatus;
 import xyz.rpolnx.spring_bank.account.model.enums.AccountType;
 import xyz.rpolnx.spring_bank.account.service.AccountService;
 
-import javax.transaction.Transactional;
 
 import static java.util.Arrays.asList;
 

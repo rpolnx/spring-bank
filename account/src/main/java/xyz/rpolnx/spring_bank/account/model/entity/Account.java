@@ -1,6 +1,8 @@
 package xyz.rpolnx.spring_bank.account.model.entity;
 
 import lombok.*;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.springframework.data.domain.Persistable;
 import xyz.rpolnx.spring_bank.account.model.enums.AccountStatus;
 import xyz.rpolnx.spring_bank.account.model.enums.AccountType;
@@ -17,6 +19,10 @@ import javax.validation.constraints.Size;
 @Builder
 @Data
 @With
+@TypeDef(
+        name = "accountStatus_enum",
+        typeClass = AccountStatus.PostgresType.class
+)
 public class Account extends BaseEntity implements Persistable<Long> {
     @Id
     @Max(999999)
@@ -32,6 +38,7 @@ public class Account extends BaseEntity implements Persistable<Long> {
     private AccountType type;
 
     @Enumerated(EnumType.STRING)
+    @Type( type = "accountStatus_enum" )
     private AccountStatus status;
 
     @Transient
