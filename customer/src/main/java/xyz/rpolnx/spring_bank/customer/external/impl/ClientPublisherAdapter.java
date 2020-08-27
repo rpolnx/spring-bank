@@ -7,7 +7,7 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import xyz.rpolnx.spring_bank.customer.external.ClientPublisher;
-import xyz.rpolnx.spring_bank.customer.model.dto.ClientDTO;
+import xyz.rpolnx.spring_bank.customer.model.dto.ClientEvent;
 
 @Component
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ public class ClientPublisherAdapter implements ClientPublisher {
 
     @SneakyThrows
     @Override
-    public void handleClientCreation(ClientDTO clientDTO) {
+    public void handleClientCreation(ClientEvent clientDTO) {
         amqpTemplate.convertAndSend(queue, mapper.writeValueAsString(clientDTO));
     }
 }
