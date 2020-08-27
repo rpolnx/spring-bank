@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
+import static xyz.rpolnx.spring_bank.common.model.enums.EventType.CREATION;
 import static xyz.rpolnx.spring_bank.customer.model.PersonType.PJ;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,17 +38,17 @@ public class ClientPublisherAdapterTest {
     @DisplayName("When sending message to ampq, should not throw exception")
     public void shouldProcessMessage() {
         ReflectionTestUtils.setField(adapter, "queue", "customer-queue");
-        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<ClientEvent> captor = ArgumentCaptor.forClass(ClientEvent.class);
 
         Client client = new Client("123", "Full Name", PJ, 10);
 
-        ClientEvent request = ClientEvent.of(client, ClientEvent.Type.CREATION);
+        ClientEvent request = ClientEvent.of(client, CREATION);
 
         doNothing().when(amqpTemplate).convertAndSend(anyString(), captor.capture());
 
         assertDoesNotThrow(() -> adapter.handleClientCreation(request));
 
-        ClientEvent actual = mapper.readValue(captor.getValue(), ClientEvent.class);
+        ClientEvent actual = captor.getValue();
 
         assertEquals(request, actual);
     }

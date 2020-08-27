@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static xyz.rpolnx.spring_bank.common.model.enums.EventType.CREATION;
+import static xyz.rpolnx.spring_bank.common.model.enums.EventType.UPDATE;
+
 @Service
 @RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService {
@@ -55,7 +58,7 @@ public class ClientServiceImpl implements ClientService {
 
         Client created = repository.save(entity);
 
-        ClientEvent event = ClientEvent.of(created, ClientEvent.Type.CREATION);
+        ClientEvent event = ClientEvent.of(created, CREATION);
 
         publisher.handleClientCreation(event);
 
@@ -76,7 +79,7 @@ public class ClientServiceImpl implements ClientService {
 
         Client updated = repository.save(entity);
 
-        ClientEvent event = ClientEvent.of(updated, ClientEvent.Type.UPDATE);
+        ClientEvent event = ClientEvent.of(updated, UPDATE);
 
         publisher.handleClientCreation(event);
     }

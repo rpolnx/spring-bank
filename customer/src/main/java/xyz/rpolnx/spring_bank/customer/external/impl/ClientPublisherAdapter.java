@@ -20,7 +20,7 @@ public class ClientPublisherAdapter implements ClientPublisher {
 
     @SneakyThrows
     @Override
-    public void handleClientCreation(ClientEvent clientDTO) {
-        amqpTemplate.convertAndSend(queue, mapper.writeValueAsString(clientDTO));
+    public void handleClientCreation(ClientEvent event) {
+        amqpTemplate.convertAndSend(queue, event);
     }
 }

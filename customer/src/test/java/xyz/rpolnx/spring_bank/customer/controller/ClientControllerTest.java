@@ -42,6 +42,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static xyz.rpolnx.spring_bank.common.model.enums.EventType.CREATION;
+import static xyz.rpolnx.spring_bank.common.model.enums.EventType.UPDATE;
 
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = {ClientController.class, GlobalExceptionHandler.class, SerializationConfig.class})
@@ -134,7 +136,7 @@ public class ClientControllerTest {
 
         ClientDTO request = new ClientDTO("01234567891", "Client", PersonType.PF);
         Client client = new Client("01234567891", "Client", PersonType.PF, 8);
-        ClientEvent event = ClientEvent.of(client, ClientEvent.Type.CREATION);
+        ClientEvent event = ClientEvent.of(client, CREATION);
 
         when(repository.findById(anyString())).thenReturn(Optional.empty());
         when(repository.save(any(Client.class))).thenReturn(client);
@@ -194,7 +196,7 @@ public class ClientControllerTest {
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        ClientEvent event = ClientEvent.of(newClient, ClientEvent.Type.UPDATE);
+        ClientEvent event = ClientEvent.of(newClient, UPDATE);
 
         verify(publisher).handleClientCreation(event);
     }

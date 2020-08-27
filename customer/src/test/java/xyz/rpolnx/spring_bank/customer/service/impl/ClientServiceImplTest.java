@@ -22,6 +22,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+import static xyz.rpolnx.spring_bank.common.model.enums.EventType.CREATION;
+import static xyz.rpolnx.spring_bank.common.model.enums.EventType.UPDATE;
 import static xyz.rpolnx.spring_bank.customer.mocks.ClientMock.generateClients;
 import static xyz.rpolnx.spring_bank.customer.model.PersonType.PF;
 import static xyz.rpolnx.spring_bank.customer.model.PersonType.PJ;
@@ -104,7 +106,7 @@ public class ClientServiceImplTest {
 
         assertDoesNotThrow(() -> service.update(request, documentNumber));
 
-        ClientEvent event = ClientEvent.of(newClient, ClientEvent.Type.UPDATE);
+        ClientEvent event = ClientEvent.of(newClient, UPDATE);
 
         verify(repository, times(1)).save(newClient);
         verify(publisher).handleClientCreation(event);
@@ -123,7 +125,7 @@ public class ClientServiceImplTest {
 
         assertDoesNotThrow(() -> service.update(request, documentNumber));
 
-        ClientEvent event = ClientEvent.of(client, ClientEvent.Type.UPDATE);
+        ClientEvent event = ClientEvent.of(client, UPDATE);
 
         verify(repository, times(1)).save(client);
         verify(publisher).handleClientCreation(event);
@@ -144,7 +146,7 @@ public class ClientServiceImplTest {
         String documentNumber = "12345678910";
         ClientDTO request = new ClientDTO(documentNumber, "Creating test", PF);
         Client created = new Client(documentNumber, "Creating test", PF, 7);
-        ClientEvent event = ClientEvent.of(created, ClientEvent.Type.CREATION);
+        ClientEvent event = ClientEvent.of(created, CREATION);
 
         when(repository.findById(documentNumber)).thenReturn(Optional.empty());
         when(repository.save(any(Client.class))).thenReturn(created);
@@ -166,7 +168,7 @@ public class ClientServiceImplTest {
 
         ClientDTO request = new ClientDTO(documentNumber, "Creating test", PJ);
         Client created = new Client(documentNumber, "Creating test", PJ, 6);
-        ClientEvent event = ClientEvent.of(created, ClientEvent.Type.CREATION);
+        ClientEvent event = ClientEvent.of(created, CREATION);
 
         when(repository.findById(documentNumber)).thenReturn(Optional.empty());
         when(repository.save(any(Client.class))).thenReturn(created);
