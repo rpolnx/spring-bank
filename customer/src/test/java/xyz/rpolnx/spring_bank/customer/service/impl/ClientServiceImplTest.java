@@ -5,14 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import xyz.rpolnx.spring_bank.customer.exceptions.BadRequestException;
 import xyz.rpolnx.spring_bank.customer.exceptions.ConflictException;
 import xyz.rpolnx.spring_bank.customer.exceptions.NotFoundException;
 import xyz.rpolnx.spring_bank.customer.external.ClientPublisher;
 import xyz.rpolnx.spring_bank.customer.external.ClientRepository;
-import xyz.rpolnx.spring_bank.customer.model.PersonType;
 import xyz.rpolnx.spring_bank.customer.model.dto.ClientDTO;
 import xyz.rpolnx.spring_bank.customer.model.entity.Client;
 
@@ -23,6 +21,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+import static xyz.rpolnx.spring_bank.customer.mocks.ClientMock.generateClients;
 import static xyz.rpolnx.spring_bank.customer.model.PersonType.PF;
 import static xyz.rpolnx.spring_bank.customer.model.PersonType.PJ;
 
@@ -42,7 +41,7 @@ public class ClientServiceImplTest {
     @Test
     @DisplayName("When database has clients, should return them all")
     public void shouldGetAllClients() {
-        List<Client> clients = generateClients(15);
+        List<Client> clients = generateClients(15, MAX_SCORE_NUMBER);
         when(repository.findAll()).thenReturn(clients);
 
         List<ClientDTO> actualClients = service.getAll();
@@ -55,7 +54,7 @@ public class ClientServiceImplTest {
     @Test
     @DisplayName("When database has no clients, should return empty list")
     public void shouldGetAllClientsWithEmptyList() {
-        List<Client> clients = generateClients(15);
+        List<Client> clients = generateClients(15, MAX_SCORE_NUMBER);
         when(repository.findAll()).thenReturn(new ArrayList<>());
 
         List<ClientDTO> actualClients = service.getAll();
@@ -194,22 +193,4 @@ public class ClientServiceImplTest {
 
         assertTrue(exception.getMessage().contains("Duplicated user"));
     }
-
-    private List<Client> generateClients(int size) {
-        List<Client> clients = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            clients.add(generateClient(i));
-        }
-        return clients;
-    }
-
-    private Client generateClient(int position) {
-        int typePositionRandom = (int) (Math.random() * PersonType.values().length);
-        PersonType type = PersonType.values()[typePositionRandom];
-
-        int randomScore = (int) (Math.random() * MAX_SCORE_NUMBER);
-
-        return new Client(String.valueOf(position), "Name #" + position, type, randomScore);
-    }
-
 }
