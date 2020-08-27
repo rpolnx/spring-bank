@@ -1,6 +1,5 @@
 package xyz.rpolnx.spring_bank.customer.config;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -20,7 +19,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @ControllerAdvice
 @ResponseBody
-@Log4j2
+@Log4j2(topic = "CONSOLE_JSON_APPENDER")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({BadRequestException.class})

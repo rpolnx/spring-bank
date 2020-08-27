@@ -26,6 +26,7 @@
     <properties>
         <java.version>11</java.version>
         <jacoco.version>0.8.5</jacoco.version>
+        <logstash.encoder.version>4.11</logstash.encoder.version>
     </properties>
 
     <dependencyManagement>
@@ -97,6 +98,12 @@
             <groupId>org.springframework.amqp</groupId>
             <artifactId>spring-rabbit-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash.encoder.version}</version>
         </dependency>
     </dependencies>
 
