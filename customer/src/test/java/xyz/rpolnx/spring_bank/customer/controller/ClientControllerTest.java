@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -88,7 +88,6 @@ public class ClientControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(mapper.writeValueAsString(response)));
     }
-
 
     @SneakyThrows
     @Test
@@ -146,6 +145,8 @@ public class ClientControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(mapper.writeValueAsString(ClientDTO.of(client).onlyDocumentNumber())));
+
+        verify(publisher).handleClientCreation(request);
     }
 
     @SneakyThrows
@@ -157,7 +158,6 @@ public class ClientControllerTest {
         Client client = new Client("01234567891", "Client", PersonType.PF, 2);
 
         when(repository.findById(anyString())).thenReturn(Optional.of(client));
-        doNothing().when(publisher).handleClientCreation(request);
 
         String message = this.request.perform(post("/clients")
                 .content(mapper.writeValueAsBytes(request))
@@ -189,6 +189,19 @@ public class ClientControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
+    }
+
+    @SneakyThrows
+    @Test
+    @DisplayName("When get single client, should return 200 and client")
+    public void deleteClient() {
+        String id = "12345678910";
+        this.request.perform(delete("/clients/{id}", id)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+
+        verify(repository).deleteById(id);
     }
 
     @SneakyThrows
@@ -350,6 +363,4 @@ public class ClientControllerTest {
         assertNotNull(exceptionWrapper);
         assertEquals("Unexpected error", exceptionWrapper.at("/message").textValue());
     }
-
-
 }
