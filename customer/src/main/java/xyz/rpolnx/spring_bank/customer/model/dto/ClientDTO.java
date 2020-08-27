@@ -26,7 +26,6 @@ public class ClientDTO {
     private String fullName;
     @NotNull
     private PersonType personType;
-    @With
     private Integer score;
 
     public ClientDTO(Client client) {

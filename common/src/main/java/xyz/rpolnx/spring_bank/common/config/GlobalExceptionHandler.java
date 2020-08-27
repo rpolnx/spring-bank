@@ -2,6 +2,8 @@ package xyz.rpolnx.spring_bank.common.config;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -41,12 +43,6 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(NOT_FOUND)
-    public ExceptionWrapper handleException(DataAccessException ex) {
-        return new ExceptionWrapper(NOT_FOUND, ex.getMessage());
-    }
-
-    @ExceptionHandler
     @ResponseStatus(CONFLICT)
     public ExceptionWrapper handleException(ConflictException ex) {
         return new ExceptionWrapper(CONFLICT, ex.getMessage());
@@ -62,6 +58,18 @@ public class GlobalExceptionHandler {
     @ResponseStatus(UNPROCESSABLE_ENTITY)
     public ExceptionWrapper handleException(ValidationException ex) {
         return new ExceptionWrapper(UNPROCESSABLE_ENTITY, ex.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(UNPROCESSABLE_ENTITY)
+    public ExceptionWrapper handleException(DataIntegrityViolationException ex) {
+        return new ExceptionWrapper(UNPROCESSABLE_ENTITY, ex.getCause().getCause().getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(UNPROCESSABLE_ENTITY)
+    public ExceptionWrapper handleException(EmptyResultDataAccessException ex) {
+        return new ExceptionWrapper(UNPROCESSABLE_ENTITY, "No client found");
     }
 
     @ExceptionHandler
