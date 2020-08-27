@@ -20,7 +20,6 @@ public enum AccountType {
     private PersonType personType;
     private static final Map<PersonType, AccountType> map;
 
-
     static {
         map = Arrays.stream(AccountType.values())
                 .collect(toMap(AccountType::getPersonType, x -> x));
