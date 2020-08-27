@@ -1,4 +1,4 @@
-package xyz.rpolnx.spring_bank.customer.model.entity;
+package xyz.rpolnx.spring_bank.common.model.entity;
 
 import lombok.Data;
 
