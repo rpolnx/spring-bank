@@ -1,6 +1,5 @@
 package xyz.rpolnx.spring_bank.customer.external.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -13,14 +12,13 @@ import xyz.rpolnx.spring_bank.customer.model.dto.ClientEvent;
 @RequiredArgsConstructor
 public class ClientPublisherAdapter implements ClientPublisher {
     private final AmqpTemplate amqpTemplate;
-    private final ObjectMapper mapper;
 
-    @Value("${customer-queue-name:customer-queue}")
-    private String queue;
+    @Value("${customer-queue-name}")
+    private String routingKey;
 
     @SneakyThrows
     @Override
     public void handleClientCreation(ClientEvent event) {
-        amqpTemplate.convertAndSend(queue, event);
+        amqpTemplate.convertAndSend(routingKey, event);
     }
 }
