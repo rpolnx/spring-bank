@@ -1,4 +1,4 @@
-package xyz.rpolnx.spring_bank.account.config;
+package xyz.rpolnx.spring_bank.common.config;
 
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
