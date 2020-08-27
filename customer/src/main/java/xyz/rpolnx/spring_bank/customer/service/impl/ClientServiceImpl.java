@@ -2,8 +2,8 @@ package xyz.rpolnx.spring_bank.customer.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import xyz.rpolnx.spring_bank.customer.exceptions.ConflictException;
-import xyz.rpolnx.spring_bank.customer.exceptions.NotFoundException;
+import xyz.rpolnx.spring_bank.common.exceptions.ConflictException;
+import xyz.rpolnx.spring_bank.common.exceptions.NotFoundException;
 import xyz.rpolnx.spring_bank.customer.external.ClientPublisher;
 import xyz.rpolnx.spring_bank.customer.external.ClientRepository;
 import xyz.rpolnx.spring_bank.customer.model.dto.ClientDTO;

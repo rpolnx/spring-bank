@@ -1,4 +1,4 @@
-package xyz.rpolnx.spring_bank.customer.exceptions;
+package xyz.rpolnx.spring_bank.common.exceptions;
 
 public class ConflictException extends RuntimeException{
     public ConflictException(String message) {

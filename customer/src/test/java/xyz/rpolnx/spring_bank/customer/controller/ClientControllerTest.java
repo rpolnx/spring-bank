@@ -15,8 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import xyz.rpolnx.spring_bank.customer.config.GlobalExceptionHandler;
-import xyz.rpolnx.spring_bank.customer.config.SerializationConfig;
+import xyz.rpolnx.spring_bank.common.config.GlobalExceptionHandler;
+import xyz.rpolnx.spring_bank.common.config.SerializationConfig;
 import xyz.rpolnx.spring_bank.customer.external.ClientPublisher;
 import xyz.rpolnx.spring_bank.customer.external.ClientRepository;
 import xyz.rpolnx.spring_bank.customer.mocks.ClientMock;
@@ -44,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = {ClientController.class, GlobalExceptionHandler.class, SerializationConfig.class})
-@TestPropertySource(properties = "logging.config=../logback-spring.xml")
+@TestPropertySource(properties = "logging.xyz.rpolnx.spring_bank.config.config=../logback-spring.xml")
 @WebMvcTest
 public class ClientControllerTest {
 

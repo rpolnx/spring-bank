@@ -1,4 +1,4 @@
-package xyz.rpolnx.spring_bank.customer.config;
+package xyz.rpolnx.spring_bank.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

@@ -1,17 +1,16 @@
-package xyz.rpolnx.spring_bank.customer.config;
+package xyz.rpolnx.spring_bank.common.config;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import xyz.rpolnx.spring_bank.customer.exceptions.BadRequestException;
-import xyz.rpolnx.spring_bank.customer.exceptions.ConflictException;
-import xyz.rpolnx.spring_bank.customer.exceptions.NotFoundException;
+import xyz.rpolnx.spring_bank.common.exceptions.BadRequestException;
+import xyz.rpolnx.spring_bank.common.exceptions.ConflictException;
+import xyz.rpolnx.spring_bank.common.exceptions.NotFoundException;
 
 import javax.validation.ValidationException;
 import java.sql.SQLException;

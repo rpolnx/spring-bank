@@ -8,6 +8,7 @@
         <module>customer</module>
         <module>account</module>
         <module>service</module>
+        <module>common</module>
     </modules>
 
     <parent>
@@ -43,6 +44,11 @@
             </dependency>
             <dependency>
                 <artifactId>service</artifactId>
+                <groupId>xyz.rpolnx</groupId>
+                <version>${project.parent.version}</version>
+            </dependency>
+            <dependency>
+                <artifactId>common</artifactId>
                 <groupId>xyz.rpolnx</groupId>
                 <version>${project.parent.version}</version>
             </dependency>

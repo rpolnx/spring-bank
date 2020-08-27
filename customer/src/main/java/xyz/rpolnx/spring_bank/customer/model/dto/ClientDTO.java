@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.With;
-import xyz.rpolnx.spring_bank.customer.exceptions.BadRequestException;
+import xyz.rpolnx.spring_bank.common.exceptions.BadRequestException;
 import xyz.rpolnx.spring_bank.customer.model.PersonType;
 import xyz.rpolnx.spring_bank.customer.model.entity.Client;
 
