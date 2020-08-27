@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class QueueConfig {
-    @Value("${customer-queue-name:customer-queue}")
+    @Value("${customer-queue-name}")
     private String queueName;
-    @Value("${customer-exchange-name:customer-exchange}")
+    @Value("${customer-exchange-name}")
     private String exchangeName;
 
     @Bean
