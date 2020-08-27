@@ -7,6 +7,7 @@ services:
     environment:
       POSTGRES_USER: ${PG_ROOT_USER}
       POSTGRES_PASSWORD: ${PG_ROOT_PASS}
+      POSTGRES_DATABASE: postgres
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
