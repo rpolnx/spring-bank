@@ -40,6 +40,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional
     public ClientDTO create(ClientDTO client) {
+        client.validate();
 
         Optional<Client> exists = repository.findById(client.getDocumentNumber());
 

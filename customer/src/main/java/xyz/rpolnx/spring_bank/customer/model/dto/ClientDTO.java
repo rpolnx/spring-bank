@@ -33,6 +33,10 @@ public class ClientDTO {
         this.score = client.getScore();
     }
 
+    public void validate() {
+        this.getPersonType().verifyDocumentSize(this.getDocumentNumber());
+    }
+
     public static ClientDTO of(Client client) {
         return new ClientDTO(client);
     }
