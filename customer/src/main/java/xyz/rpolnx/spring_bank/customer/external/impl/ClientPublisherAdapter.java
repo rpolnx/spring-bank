@@ -18,7 +18,7 @@ public class ClientPublisherAdapter implements ClientPublisher {
 
     @SneakyThrows
     @Override
-    public void handleClientCreation(ClientEvent event) {
+    public void handleClientEvent(ClientEvent event) {
         amqpTemplate.convertAndSend(routingKey, event);
     }
 }

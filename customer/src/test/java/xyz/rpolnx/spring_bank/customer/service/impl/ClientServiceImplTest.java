@@ -22,8 +22,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-import static xyz.rpolnx.spring_bank.common.model.enums.EventType.CREATION;
-import static xyz.rpolnx.spring_bank.common.model.enums.EventType.UPDATE;
+import static xyz.rpolnx.spring_bank.common.model.enums.EventType.*;
 import static xyz.rpolnx.spring_bank.customer.mocks.ClientMock.generateClients;
 import static xyz.rpolnx.spring_bank.customer.model.PersonType.PF;
 import static xyz.rpolnx.spring_bank.customer.model.PersonType.PJ;
@@ -109,7 +108,7 @@ public class ClientServiceImplTest {
         ClientEvent event = ClientEvent.of(newClient, UPDATE);
 
         verify(repository, times(1)).save(newClient);
-        verify(publisher).handleClientCreation(event);
+        verify(publisher).handleClientEvent(event);
     }
 
     @Test
@@ -128,16 +127,19 @@ public class ClientServiceImplTest {
         ClientEvent event = ClientEvent.of(client, UPDATE);
 
         verify(repository, times(1)).save(client);
-        verify(publisher).handleClientCreation(event);
+        verify(publisher).handleClientEvent(event);
     }
 
     @Test
     @DisplayName("When deleting client, should not throw exception")
     public void shouldDeleteClient() {
         String documentNumber = "1234";
+        Client client = new Client().withDocumentNumber(documentNumber);
+        ClientEvent event = ClientEvent.of(client, DELETE);
 
         assertDoesNotThrow(() -> service.delete(documentNumber));
-        verify(repository, times(1)).deleteById(documentNumber);
+        verify(repository, times(1)).delete(client);
+        verify(publisher, times(1)).handleClientEvent(event);
     }
 
     @Test
@@ -158,7 +160,7 @@ public class ClientServiceImplTest {
         assertNull(createdClient.getPersonType());
         assertNull(createdClient.getScore());
 
-        verify(publisher, times(1)).handleClientCreation(event);
+        verify(publisher, times(1)).handleClientEvent(event);
     }
 
     @Test
@@ -180,7 +182,7 @@ public class ClientServiceImplTest {
         assertNull(createdClient.getPersonType());
         assertNull(createdClient.getScore());
 
-        verify(publisher, times(1)).handleClientCreation(event);
+        verify(publisher, times(1)).handleClientEvent(event);
     }
 
     @Test

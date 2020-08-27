@@ -22,4 +22,11 @@ public class Client extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PersonType personType;
     private Integer score;
+
+    public Client withNewValues(String fullName, PersonType personType, Integer score) {
+        this.fullName = fullName;
+        this.personType = personType;
+        this.score = score;
+        return this;
+    }
 }

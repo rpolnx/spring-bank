@@ -42,8 +42,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static xyz.rpolnx.spring_bank.common.model.enums.EventType.CREATION;
-import static xyz.rpolnx.spring_bank.common.model.enums.EventType.UPDATE;
+import static xyz.rpolnx.spring_bank.common.model.enums.EventType.*;
 
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = {ClientController.class, GlobalExceptionHandler.class, SerializationConfig.class})
@@ -150,7 +149,7 @@ public class ClientControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(mapper.writeValueAsString(ClientDTO.withOnlyDocumentNumber(client.getDocumentNumber()))));
 
-        verify(publisher).handleClientCreation(event);
+        verify(publisher).handleClientEvent(event);
     }
 
     @SneakyThrows
@@ -198,7 +197,7 @@ public class ClientControllerTest {
 
         ClientEvent event = ClientEvent.of(newClient, UPDATE);
 
-        verify(publisher).handleClientCreation(event);
+        verify(publisher).handleClientEvent(event);
     }
 
     @SneakyThrows
@@ -206,12 +205,16 @@ public class ClientControllerTest {
     @DisplayName("When get single client, should return 200 and client")
     public void deleteClient() {
         String id = "12345678910";
+        Client client = new Client().withDocumentNumber(id);
+        ClientEvent event = ClientEvent.of(client, DELETE);
+
         this.request.perform(delete("/clients/{id}", id)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        verify(repository).deleteById(id);
+        verify(repository).delete(client);
+        verify(publisher).handleClientEvent(event);
     }
 
     @SneakyThrows

@@ -2,7 +2,6 @@ package xyz.rpolnx.spring_bank.customer.external.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,7 +9,6 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
-import xyz.rpolnx.spring_bank.customer.model.dto.ClientDTO;
 import xyz.rpolnx.spring_bank.customer.model.dto.ClientEvent;
 import xyz.rpolnx.spring_bank.customer.model.entity.Client;
 
@@ -37,7 +35,7 @@ public class ClientPublisherAdapterTest {
     @Test
     @DisplayName("When sending message to ampq, should not throw exception")
     public void shouldProcessMessage() {
-        ReflectionTestUtils.setField(adapter, "queue", "customer-queue");
+        ReflectionTestUtils.setField(adapter, "routingKey", "customer-queue");
         ArgumentCaptor<ClientEvent> captor = ArgumentCaptor.forClass(ClientEvent.class);
 
         Client client = new Client("123", "Full Name", PJ, 10);
@@ -46,7 +44,7 @@ public class ClientPublisherAdapterTest {
 
         doNothing().when(amqpTemplate).convertAndSend(anyString(), captor.capture());
 
-        assertDoesNotThrow(() -> adapter.handleClientCreation(request));
+        assertDoesNotThrow(() -> adapter.handleClientEvent(request));
 
         ClientEvent actual = captor.getValue();
 

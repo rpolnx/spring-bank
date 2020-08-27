@@ -11,9 +11,4 @@ public enum PersonType {
 
     private final String displayName;
     private final int documentSize;
-
-    @JsonSerialize
-    public String serialize() {
-        return this.getDisplayName();
-    }
 }

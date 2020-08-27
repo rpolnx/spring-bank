@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static xyz.rpolnx.spring_bank.common.model.enums.EventType.CREATION;
-import static xyz.rpolnx.spring_bank.common.model.enums.EventType.UPDATE;
+import static xyz.rpolnx.spring_bank.common.model.enums.EventType.*;
 
 @Service
 @RequiredArgsConstructor
@@ -60,7 +59,7 @@ public class ClientServiceImpl implements ClientService {
 
         ClientEvent event = ClientEvent.of(created, CREATION);
 
-        publisher.handleClientCreation(event);
+        publisher.handleClientEvent(event);
 
         return ClientDTO.withOnlyDocumentNumber(created.getDocumentNumber());
     }
@@ -73,19 +72,23 @@ public class ClientServiceImpl implements ClientService {
         Client entity = repository.findById(documentNumber)
                 .orElse(new Client(documentNumber, dto.getFullName(), dto.getPersonType(), dto.getScore()));
 
-        entity.setFullName(dto.getFullName());
-        entity.setPersonType(dto.getPersonType());
-        entity.setScore(dto.getScore());
+        Client updatedEntity = entity.withNewValues(dto.getFullName(), dto.getPersonType(), dto.getScore());
 
-        Client updated = repository.save(entity);
+        Client updated = repository.save(updatedEntity);
 
         ClientEvent event = ClientEvent.of(updated, UPDATE);
 
-        publisher.handleClientCreation(event);
+        publisher.handleClientEvent(event);
     }
 
     @Override
     public void delete(String documentNumber) {
-        repository.deleteById(documentNumber);
+        Client client = new Client().withDocumentNumber(documentNumber);
+
+        repository.delete(client);
+
+        ClientEvent event = ClientEvent.of(client, DELETE);
+
+        publisher.handleClientEvent(event);
     }
 }
