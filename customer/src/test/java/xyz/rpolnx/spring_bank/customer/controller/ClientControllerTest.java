@@ -44,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = {ClientController.class, GlobalExceptionHandler.class, SerializationConfig.class})
-@TestPropertySource(properties = "logging.xyz.rpolnx.spring_bank.config.config=../logback-spring.xml")
+@TestPropertySource(properties = "logging.config=../logback-spring.xml")
 @WebMvcTest
 public class ClientControllerTest {
 
