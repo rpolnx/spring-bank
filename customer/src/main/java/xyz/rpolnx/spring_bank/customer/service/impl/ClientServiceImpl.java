@@ -45,7 +45,7 @@ public class ClientServiceImpl implements ClientService {
         Optional<Client> exists = repository.findById(client.getDocumentNumber());
 
         if (exists.isPresent()) {
-            throw new ConflictException("Duplicated user");
+            throw new ConflictException("Duplicated client");
         }
 
         int score = (int) (Math.random() * MAX_SCORE_NUMBER);

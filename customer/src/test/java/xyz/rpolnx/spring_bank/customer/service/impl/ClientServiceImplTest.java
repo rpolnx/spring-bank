@@ -191,6 +191,6 @@ public class ClientServiceImplTest {
 
         ConflictException exception = assertThrows(ConflictException.class, () -> service.create(request));
 
-        assertTrue(exception.getMessage().contains("Duplicated user"));
+        assertTrue(exception.getMessage().contains("Duplicated client"));
     }
 }
