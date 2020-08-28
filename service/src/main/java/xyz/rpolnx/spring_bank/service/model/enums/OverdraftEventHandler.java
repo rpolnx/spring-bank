@@ -2,8 +2,8 @@ package xyz.rpolnx.spring_bank.service.model.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import xyz.rpolnx.spring_bank.common.model.dto.AccountEvent;
 import xyz.rpolnx.spring_bank.common.model.enums.EventType;
-import xyz.rpolnx.spring_bank.service.model.dto.AccountEvent;
 import xyz.rpolnx.spring_bank.service.service.OverdraftService;
 
 import java.util.Arrays;

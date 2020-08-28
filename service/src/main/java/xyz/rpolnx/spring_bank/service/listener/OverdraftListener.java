@@ -5,7 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
-import xyz.rpolnx.spring_bank.service.model.dto.AccountEvent;
+import xyz.rpolnx.spring_bank.common.model.dto.AccountEvent;
 import xyz.rpolnx.spring_bank.service.model.enums.OverdraftEventHandler;
 import xyz.rpolnx.spring_bank.service.service.OverdraftService;
 
@@ -15,7 +15,7 @@ import xyz.rpolnx.spring_bank.service.service.OverdraftService;
 public class OverdraftListener {
     private final OverdraftService service;
 
-    @RabbitListener(queues = "${customer-queue-name}")
+    @RabbitListener(queues = "${overdraft-queue-name}")
     public void receive(@Payload final AccountEvent event) {
         log.info("Consuming message from overdraft queue: {}", event);
 
@@ -23,7 +23,7 @@ public class OverdraftListener {
 
         eventHandler.getCallable().accept(service, event);
 
-        log.info("Finalize message consume from overdraft queue with accountId: {}", event.getAccountId());
+        log.info("Finalize message consume from overdraft queue with accountId: {}", event.getAccount().getId());
     }
 
 
