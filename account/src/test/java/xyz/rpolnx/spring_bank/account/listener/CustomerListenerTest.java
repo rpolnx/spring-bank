@@ -34,7 +34,7 @@ public class CustomerListenerTest {
     }
 
     @Test
-    @DisplayName("When receive CREATION event, should handle to createAccount method")
+    @DisplayName("When receive UPDATE event, should handle to updateAccount method")
     public void handleUpdateAccount() {
         CustomerEvent.Customer customer = new CustomerEvent.Customer("123", PF, 10, "Test");
         CustomerEvent customerEvent = new CustomerEvent(EventType.UPDATE, customer);
@@ -45,7 +45,7 @@ public class CustomerListenerTest {
     }
 
     @Test
-    @DisplayName("When receive CREATION event, should handle to createAccount method")
+    @DisplayName("When receive DELETE event, should handle to deleteAccount method")
     public void handleDeleteAccount() {
         CustomerEvent.Customer customer = new CustomerEvent.Customer("123", PF, 10, "Test");
         CustomerEvent customerEvent = new CustomerEvent(EventType.DELETE, customer);
