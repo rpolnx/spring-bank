@@ -6,7 +6,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import xyz.rpolnx.spring_bank.account.model.dto.CustomerEvent;
-import xyz.rpolnx.spring_bank.account.model.enums.EventHandler;
+import xyz.rpolnx.spring_bank.account.model.enums.CustomerEventHandler;
 import xyz.rpolnx.spring_bank.account.service.AccountService;
 
 @Component
@@ -19,9 +19,9 @@ public class CustomerListener {
     public void receive(@Payload final CustomerEvent event) {
         log.info("Consuming message from customer queue: {}", event);
 
-        EventHandler eventHandler = EventHandler.fromEventType(event.getType());
+        CustomerEventHandler customerEventHandler = CustomerEventHandler.fromEventType(event.getType());
 
-        eventHandler.getCallable().accept(service, event);
+        customerEventHandler.getCallable().accept(service, event);
 
         log.info("Finalize message consume from customer queue: {}", event.getClientId());
     }

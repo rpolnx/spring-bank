@@ -14,7 +14,7 @@ import static java.util.stream.Collectors.toMap;
 
 @AllArgsConstructor
 @Getter
-public enum EventHandler {
+public enum CustomerEventHandler {
     CREATION(EventType.CREATION, AccountService::createAccount),
     UPDATE(EventType.UPDATE, AccountService::updateAccount),
     DELETE(EventType.DELETE, AccountService::deleteAccount);
@@ -22,14 +22,14 @@ public enum EventHandler {
     public final EventType type;
     public final BiConsumer<AccountService, CustomerEvent> callable;
 
-    private static final Map<EventType, EventHandler> map;
+    private static final Map<EventType, CustomerEventHandler> map;
 
     static {
-        map = Arrays.stream(EventHandler.values())
-                .collect(toMap(EventHandler::getType, x -> x));
+        map = Arrays.stream(CustomerEventHandler.values())
+                .collect(toMap(CustomerEventHandler::getType, x -> x));
     }
 
-    public static EventHandler fromEventType(EventType type) {
+    public static CustomerEventHandler fromEventType(EventType type) {
         return map.get(type);
     }
 }
