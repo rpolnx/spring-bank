@@ -28,6 +28,7 @@
         <java.version>11</java.version>
         <jacoco.version>0.8.5</jacoco.version>
         <logstash.encoder.version>4.11</logstash.encoder.version>
+        <spring.feign.version>2.2.4.RELEASE</spring.feign.version>
     </properties>
 
     <dependencyManagement>
