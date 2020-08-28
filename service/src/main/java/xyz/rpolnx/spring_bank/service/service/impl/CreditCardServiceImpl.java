@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.rpolnx.spring_bank.common.model.dto.AccountEvent;
 import xyz.rpolnx.spring_bank.common.model.dto.CustomerEvent;
+import xyz.rpolnx.spring_bank.common.model.dto.integration.CreditCardDTO;
 import xyz.rpolnx.spring_bank.common.util.RandomGeneratorUtils;
 import xyz.rpolnx.spring_bank.service.external.CreditCardRepository;
-import xyz.rpolnx.spring_bank.common.model.dto.integration.CreditCardDTO;
 import xyz.rpolnx.spring_bank.service.model.entity.CreditCard;
 import xyz.rpolnx.spring_bank.service.model.entity.ScoreCategory;
 import xyz.rpolnx.spring_bank.service.model.factory.CreditCardBuilder;
@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 @RequiredArgsConstructor
 @Service
@@ -78,7 +79,10 @@ public class CreditCardServiceImpl implements CreditCardService {
                     if (!it.getScoreCategory().equals(category)) {
                         it.setScoreCategory(category);
 
-                        Double limitDifference = category.getCreditCardLimit() - it.getScoreCategory().getCreditCardLimit();
+                        Double newCreditCardLimit = nonNull(category.getCreditCardLimit()) ? category.getCreditCardLimit() : 0;
+                        Double oldCreditCardLimit = nonNull(it.getScoreCategory().getCreditCardLimit()) ? it.getScoreCategory().getCreditCardLimit() : 0;
+
+                        Double limitDifference = newCreditCardLimit - oldCreditCardLimit;
                         double availableLimit = limitDifference + it.getRemainingLimit();
 
                         it.setRemainingLimit(availableLimit > 0 ? availableLimit : 0);

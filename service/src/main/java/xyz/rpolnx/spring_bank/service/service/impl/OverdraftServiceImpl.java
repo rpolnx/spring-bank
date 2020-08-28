@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.rpolnx.spring_bank.common.model.dto.AccountEvent;
 import xyz.rpolnx.spring_bank.common.model.dto.CustomerEvent;
-import xyz.rpolnx.spring_bank.service.external.OverdraftRepository;
 import xyz.rpolnx.spring_bank.common.model.dto.integration.OverdraftDTO;
+import xyz.rpolnx.spring_bank.service.external.OverdraftRepository;
 import xyz.rpolnx.spring_bank.service.model.entity.Overdraft;
 import xyz.rpolnx.spring_bank.service.model.entity.ScoreCategory;
 import xyz.rpolnx.spring_bank.service.model.factory.OverdraftDTOFactory;
@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 @RequiredArgsConstructor
 @Service
@@ -77,7 +78,10 @@ public class OverdraftServiceImpl implements OverdraftService {
                     if (!it.getScoreCategory().equals(category)) {
                         it.setScoreCategory(category);
 
-                        Double limitDifference = category.getOverdraftLimit() - it.getScoreCategory().getOverdraftLimit();
+                        Double overdraftLimit = nonNull(category.getOverdraftLimit()) ? category.getOverdraftLimit() : 0;
+                        Double currentLimit = nonNull(it.getScoreCategory().getOverdraftLimit()) ? it.getScoreCategory().getOverdraftLimit() : 0;
+
+                        Double limitDifference = overdraftLimit - currentLimit;
                         double availableLimit = limitDifference + it.getRemainingLimit();
 
                         it.setRemainingLimit(availableLimit > 0 ? availableLimit : 0);
