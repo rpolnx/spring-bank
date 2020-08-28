@@ -10,7 +10,7 @@ create type "AccountStatus" as ENUM (
 );
 
 CREATE TABLE "accounts" (
-  "number" BIGSERIAL PRIMARY KEY,
+  "number" bigint PRIMARY KEY,
   "client_id" varchar(14) NOT NULL,
   "agency" varchar(8) NOT NULL,
   "type" "AccountType" NOT NULL,
