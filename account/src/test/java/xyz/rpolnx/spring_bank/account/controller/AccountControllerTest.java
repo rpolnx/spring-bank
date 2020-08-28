@@ -181,5 +181,4 @@ public class AccountControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(mapper.writeValueAsString(response)));
     }
-
 }
