@@ -11,6 +11,7 @@ import xyz.rpolnx.spring_bank.common.model.enums.EventType;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@NoArgsConstructor
 public class AccountEvent extends CustomerEvent {
     private Account account;
 

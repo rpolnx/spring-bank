@@ -8,6 +8,7 @@ import xyz.rpolnx.spring_bank.common.model.enums.PersonType;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
+@NoArgsConstructor
 public class CustomerEvent extends Event {
     protected Customer customer;
 

@@ -10,7 +10,7 @@ import xyz.rpolnx.spring_bank.service.service.ScoreCategoryService;
 @RequiredArgsConstructor
 @Service
 public class ScoreCategoryServiceImpl implements ScoreCategoryService {
-    private ScoreCategoryRepository repository;
+    private final ScoreCategoryRepository repository;
 
     @Override
     public ScoreCategory getActiveCategory(Integer score) {
