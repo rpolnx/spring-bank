@@ -16,11 +16,12 @@ import static javax.persistence.FetchType.EAGER;
 @NoArgsConstructor
 @Data
 @With
+@Builder
 public class Overdraft extends BaseEntity {
     @Id
     private Long accountId;
     private Double remainingLimit;
-    
+
     @ManyToOne(fetch = EAGER)
     private ScoreCategory scoreCategory;
     private LocalDateTime deletedOn;
