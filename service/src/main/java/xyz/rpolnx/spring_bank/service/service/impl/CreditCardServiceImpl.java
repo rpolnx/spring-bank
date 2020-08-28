@@ -32,7 +32,7 @@ public class CreditCardServiceImpl implements CreditCardService {
     private final CreditCardRepository repository;
 
     private static final Integer MAX_SECURITY_CODE_DIGITS = 3;
-    private static final Integer CARD_NUMBER_OF_RANDOM_NUMBERS = 15;
+    private static final Integer CARD_NUMBER_OF_RANDOM_NUMBERS = 16;
     private static final String CARD_BRAND_PREFIX = "9";
     private static final String CARD_BRAND_NAME = "My brand";
     private static final LocalDate expiration = LocalDate.now().plusYears(5);
