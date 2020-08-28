@@ -52,7 +52,7 @@ $ java -jar service/*.jar
 - account  - microsservico responsável pelo domínio da conta
 - service  - microsservico responsável pelo domínio de serviços (cartão e cheque especial)
 
-Estrutura interna:
+### Estrutura interna:
 config - arquivos de configurações gerais da aplicação
 
 `controller` - camada de integração rest inicial
@@ -65,3 +65,17 @@ config - arquivos de configurações gerais da aplicação
 
 `service` - Camada responsável por realizar a regra de negócio
 
+
+### Construção das tabelas
+- Customer MS
+![Customer MS](https://github.com/rodrigorpo/spring-bank/blob/master/images/customer_ms.png)
+
+- Account MS
+![Account MS](https://github.com/rodrigorpo/spring-bank/blob/master/images/account_ms.png)
+
+- Service MS
+![Service MS](https://github.com/rodrigorpo/spring-bank/blob/master/images/service_ms.png)
+
+
+### Desenho da arquitetura
+![Arquitetura](https://github.com/rodrigorpo/spring-bank/blob/master/images/architecture-example.jpg)
