@@ -2,13 +2,14 @@ package xyz.rpolnx.spring_bank.account.model.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import xyz.rpolnx.spring_bank.common.model.enums.PersonType;
 
 import java.util.Arrays;
 import java.util.Map;
 
 import static java.util.stream.Collectors.toMap;
-import static xyz.rpolnx.spring_bank.account.model.enums.PersonType.PF;
-import static xyz.rpolnx.spring_bank.account.model.enums.PersonType.PJ;
+import static xyz.rpolnx.spring_bank.common.model.enums.PersonType.PF;
+import static xyz.rpolnx.spring_bank.common.model.enums.PersonType.PJ;
 
 @AllArgsConstructor
 @Getter

@@ -2,7 +2,7 @@ package xyz.rpolnx.spring_bank.account.model.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import xyz.rpolnx.spring_bank.account.model.dto.CustomerEvent;
+import xyz.rpolnx.spring_bank.common.model.dto.CustomerEvent;
 import xyz.rpolnx.spring_bank.account.service.AccountService;
 import xyz.rpolnx.spring_bank.common.model.enums.EventType;
 

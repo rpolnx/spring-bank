@@ -6,7 +6,7 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.stereotype.Component;
 import xyz.rpolnx.spring_bank.account.external.AccountPublisher;
-import xyz.rpolnx.spring_bank.account.model.dto.AccountEvent;
+import xyz.rpolnx.spring_bank.common.model.dto.AccountEvent;
 
 @Component
 @RequiredArgsConstructor
@@ -21,7 +21,7 @@ public class AccountPublisherAdapter implements AccountPublisher {
 
         amqpTemplate.convertAndSend(accountExchange.getName(), "", accountEvent);
 
-        log.info("Finalizing message publish from accountEvent: {}", accountEvent.getAccountNumber());
+        log.info("Finalizing message publish from accountEvent: {}", accountEvent.getAccount().getId());
     }
 
     @Override
@@ -30,6 +30,6 @@ public class AccountPublisherAdapter implements AccountPublisher {
 
         amqpTemplate.convertAndSend(accountExchange.getName(), "", accountEvent);
 
-        log.info("Finalizing message publish from accountEvent: {}", accountEvent.getAccountNumber());
+        log.info("Finalizing message publish from accountEvent: {}", accountEvent.getAccount().getId());
     }
 }

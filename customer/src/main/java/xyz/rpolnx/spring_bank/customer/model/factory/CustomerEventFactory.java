@@ -13,7 +13,7 @@ public class CustomerEventFactory {
         CustomerEvent.Customer innerCustomer = new CustomerEvent.Customer(client.getDocumentNumber(),
                 getCommonEnum(client.getPersonType()), client.getScore(), client.getFullName());
 
-        return new CustomerEvent(innerCustomer, type);
+        return new CustomerEvent(type, innerCustomer);
     }
 
     private static PersonType getCommonEnum(CustomPersonType personType) {

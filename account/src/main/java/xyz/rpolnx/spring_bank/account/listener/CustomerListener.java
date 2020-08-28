@@ -5,7 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
-import xyz.rpolnx.spring_bank.account.model.dto.CustomerEvent;
+import xyz.rpolnx.spring_bank.common.model.dto.CustomerEvent;
 import xyz.rpolnx.spring_bank.account.model.enums.CustomerEventHandler;
 import xyz.rpolnx.spring_bank.account.service.AccountService;
 
@@ -23,6 +23,6 @@ public class CustomerListener {
 
         customerEventHandler.getCallable().accept(service, event);
 
-        log.info("Finalize message consume from customer queue: {}", event.getClientId());
+        log.info("Finalize message consume from customer queue: {}", event.getCustomer().getId());
     }
 }
