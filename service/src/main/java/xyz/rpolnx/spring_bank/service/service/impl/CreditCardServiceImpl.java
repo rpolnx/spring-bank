@@ -60,10 +60,10 @@ public class CreditCardServiceImpl implements CreditCardService {
                     if (!it.getScoreCategory().equals(category)) {
                         it.setScoreCategory(category);
 
-                        Double limitDifference = it.getScoreCategory().getCreditCardLimit();
-                        double availableLimit = limitDifference - it.getRemainingLimit();
+                        Double limitDifference = category.getCreditCardLimit() - it.getScoreCategory().getCreditCardLimit();
+                        double availableLimit = limitDifference + it.getRemainingLimit();
 
-                        it.setRemainingLimit(availableLimit);
+                        it.setRemainingLimit(availableLimit > 0 ? availableLimit : 0);
                         log.info("Credit card with id {} updated for accountId {}", it.getNumber(), event.getAccount().getId());
                     }
                 });
@@ -76,7 +76,7 @@ public class CreditCardServiceImpl implements CreditCardService {
         repository.findAllByAccountIdAndDeletedOnIsNull(event.getAccount().getId())
                 .forEach(it -> {
                     it.setDeletedOn(LocalDateTime.now());
-                    log.info("Inactivating Credit card with id {} updated for accountId {}", it.getNumber(),
+                    log.info("Inactivating Credit card with id {} for accountId {}", it.getNumber(),
                             event.getAccount().getId());
                 });
         log.info("Credit cards for accountId {} inactivated", event.getAccount().getId());
