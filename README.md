@@ -79,3 +79,8 @@ config - arquivos de configurações gerais da aplicação
 
 ### Desenho da arquitetura
 ![Arquitetura](https://github.com/rodrigorpo/spring-bank/blob/master/images/architecture-example.jpg)
+
+
+## Considerações finais
+- A collection está em anexo - Insomnia
+- Os microsservicos customer, account e service estão rodando, respectivamente, nas portas 8080, 8081 e 8082
