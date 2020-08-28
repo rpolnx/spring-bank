@@ -1,4 +1,4 @@
-package xyz.rpolnx.spring_bank.customer.model.enums;
+package xyz.rpolnx.spring_bank.common.model.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

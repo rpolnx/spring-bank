@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static xyz.rpolnx.spring_bank.common.model.enums.EventType.CREATION;
-import static xyz.rpolnx.spring_bank.customer.model.enums.CustomPersonType.PJ;
+import static xyz.rpolnx.spring_bank.common.model.enums.CustomPersonType.PJ;
 
 @ExtendWith(MockitoExtension.class)
 public class ClientPublisherAdapterTest {

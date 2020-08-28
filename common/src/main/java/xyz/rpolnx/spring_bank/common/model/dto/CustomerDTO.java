@@ -1,10 +1,12 @@
-package xyz.rpolnx.spring_bank.customer.model.dto;
+package xyz.rpolnx.spring_bank.common.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.With;
 import xyz.rpolnx.spring_bank.common.exceptions.BadRequestException;
-import xyz.rpolnx.spring_bank.customer.model.enums.CustomPersonType;
-import xyz.rpolnx.spring_bank.customer.model.entity.Client;
+import xyz.rpolnx.spring_bank.common.model.enums.CustomPersonType;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -16,7 +18,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @NoArgsConstructor
 @Data
 @JsonInclude(NON_NULL)
-public class ClientDTO {
+public class CustomerDTO {
     @NotNull
     @Pattern(regexp = "^\\d{11,14}$")
     @With
@@ -28,14 +30,7 @@ public class ClientDTO {
     private CustomPersonType personType;
     private Integer score;
 
-    public ClientDTO(Client client) {
-        this.documentNumber = client.getDocumentNumber();
-        this.fullName = client.getFullName();
-        this.personType = client.getPersonType();
-        this.score = client.getScore();
-    }
-
-    public ClientDTO(String documentNumber, String fullName, CustomPersonType personType) {
+    public CustomerDTO(String documentNumber, String fullName, CustomPersonType personType) {
         this.documentNumber = documentNumber;
         this.fullName = fullName;
         this.personType = personType;
@@ -49,11 +44,7 @@ public class ClientDTO {
         }
     }
 
-    public static ClientDTO withOnlyDocumentNumber(String documentNumber) {
-        return new ClientDTO().withDocumentNumber(documentNumber);
-    }
-
-    public static ClientDTO of(Client client) {
-        return new ClientDTO(client);
+    public static CustomerDTO withOnlyDocumentNumber(String documentNumber) {
+        return new CustomerDTO().withDocumentNumber(documentNumber);
     }
 }

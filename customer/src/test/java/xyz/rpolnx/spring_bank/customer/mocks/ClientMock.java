@@ -1,6 +1,6 @@
 package xyz.rpolnx.spring_bank.customer.mocks;
 
-import xyz.rpolnx.spring_bank.customer.model.enums.CustomPersonType;
+import xyz.rpolnx.spring_bank.common.model.enums.CustomPersonType;
 import xyz.rpolnx.spring_bank.customer.model.entity.Client;
 
 import java.util.ArrayList;

@@ -1,9 +1,8 @@
 package xyz.rpolnx.spring_bank.customer.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import xyz.rpolnx.spring_bank.customer.model.dto.ClientDTO;
+import xyz.rpolnx.spring_bank.common.model.dto.CustomerDTO;
 import xyz.rpolnx.spring_bank.customer.service.ClientService;
 
 import javax.validation.Valid;
@@ -20,26 +19,26 @@ public class ClientController {
 
     @GetMapping
     @ResponseStatus(OK)
-    public List<ClientDTO> getAll() {
+    public List<CustomerDTO> getAll() {
         return service.getAll();
     }
 
     @GetMapping("/{documentNumber}")
     @ResponseStatus(OK)
-    public ClientDTO get(@PathVariable("documentNumber") String documentNumber) {
+    public CustomerDTO get(@PathVariable("documentNumber") String documentNumber) {
         return service.get(documentNumber);
     }
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public ClientDTO create(@Valid @RequestBody ClientDTO clientDTO) {
-        return service.create(clientDTO);
+    public CustomerDTO create(@Valid @RequestBody CustomerDTO customerDTO) {
+        return service.create(customerDTO);
     }
 
     @PutMapping("/{documentNumber}")
     @ResponseStatus(NO_CONTENT)
-    public void update(@Valid @RequestBody ClientDTO clientDTO, @PathVariable("documentNumber") String documentNumber) {
-        service.update(clientDTO, documentNumber);
+    public void update(@Valid @RequestBody CustomerDTO customerDTO, @PathVariable("documentNumber") String documentNumber) {
+        service.update(customerDTO, documentNumber);
     }
 
     @DeleteMapping("/{documentNumber}")

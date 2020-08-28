@@ -3,6 +3,7 @@ package xyz.rpolnx.spring_bank.account.model.dto;
 import lombok.*;
 import xyz.rpolnx.spring_bank.account.model.enums.AccountStatus;
 import xyz.rpolnx.spring_bank.account.model.enums.AccountType;
+import xyz.rpolnx.spring_bank.common.model.dto.CustomerDTO;
 import xyz.rpolnx.spring_bank.common.model.dto.integration.CreditCardDTO;
 import xyz.rpolnx.spring_bank.common.model.dto.integration.OverdraftDTO;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @Builder
 public class AccountDTO {
     private Account account;
+    private CustomerDTO customer;
     private List<CreditCardDTO> cards;
     private List<OverdraftDTO> overdrafts;
 

@@ -2,7 +2,7 @@ package xyz.rpolnx.spring_bank.customer.model.entity;
 
 import lombok.*;
 import xyz.rpolnx.spring_bank.common.model.entity.BaseEntity;
-import xyz.rpolnx.spring_bank.customer.model.enums.CustomPersonType;
+import xyz.rpolnx.spring_bank.common.model.enums.CustomPersonType;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

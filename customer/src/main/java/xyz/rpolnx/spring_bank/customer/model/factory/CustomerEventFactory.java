@@ -4,7 +4,7 @@ import xyz.rpolnx.spring_bank.common.model.dto.CustomerEvent;
 import xyz.rpolnx.spring_bank.common.model.enums.EventType;
 import xyz.rpolnx.spring_bank.common.model.enums.PersonType;
 import xyz.rpolnx.spring_bank.customer.model.entity.Client;
-import xyz.rpolnx.spring_bank.customer.model.enums.CustomPersonType;
+import xyz.rpolnx.spring_bank.common.model.enums.CustomPersonType;
 
 import java.util.Objects;
 

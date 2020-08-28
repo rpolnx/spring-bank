@@ -1,17 +1,17 @@
 package xyz.rpolnx.spring_bank.customer.service;
 
-import xyz.rpolnx.spring_bank.customer.model.dto.ClientDTO;
+import xyz.rpolnx.spring_bank.common.model.dto.CustomerDTO;
 
 import java.util.List;
 
 public interface ClientService {
-    List<ClientDTO> getAll();
+    List<CustomerDTO> getAll();
 
-    ClientDTO get(String documentNumber);
+    CustomerDTO get(String documentNumber);
 
-    ClientDTO create(ClientDTO client);
+    CustomerDTO create(CustomerDTO client);
 
-    void update(ClientDTO client, String documentNumber);
+    void update(CustomerDTO client, String documentNumber);
 
     void delete(String documentNumber);
 }

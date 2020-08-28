@@ -12,7 +12,7 @@ import xyz.rpolnx.spring_bank.common.exceptions.NotFoundException;
 import xyz.rpolnx.spring_bank.common.model.dto.CustomerEvent;
 import xyz.rpolnx.spring_bank.customer.external.ClientPublisher;
 import xyz.rpolnx.spring_bank.customer.external.ClientRepository;
-import xyz.rpolnx.spring_bank.customer.model.dto.ClientDTO;
+import xyz.rpolnx.spring_bank.common.model.dto.CustomerDTO;
 import xyz.rpolnx.spring_bank.customer.model.entity.Client;
 import xyz.rpolnx.spring_bank.customer.model.factory.CustomerEventFactory;
 
@@ -25,8 +25,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static xyz.rpolnx.spring_bank.common.model.enums.EventType.*;
 import static xyz.rpolnx.spring_bank.customer.mocks.ClientMock.generateClients;
-import static xyz.rpolnx.spring_bank.customer.model.enums.CustomPersonType.PF;
-import static xyz.rpolnx.spring_bank.customer.model.enums.CustomPersonType.PJ;
+import static xyz.rpolnx.spring_bank.common.model.enums.CustomPersonType.PF;
+import static xyz.rpolnx.spring_bank.common.model.enums.CustomPersonType.PJ;
 
 @ExtendWith(MockitoExtension.class)
 public class ClientServiceImplTest {
@@ -47,7 +47,7 @@ public class ClientServiceImplTest {
         List<Client> clients = generateClients(15, MAX_SCORE_NUMBER);
         when(repository.findAll()).thenReturn(clients);
 
-        List<ClientDTO> actualClients = service.getAll();
+        List<CustomerDTO> actualClients = service.getAll();
 
         assertFalse(actualClients.isEmpty());
         assertEquals("Name #13", actualClients.get(13).getFullName());
@@ -60,7 +60,7 @@ public class ClientServiceImplTest {
         List<Client> clients = generateClients(15, MAX_SCORE_NUMBER);
         when(repository.findAll()).thenReturn(new ArrayList<>());
 
-        List<ClientDTO> actualClients = service.getAll();
+        List<CustomerDTO> actualClients = service.getAll();
 
         assertTrue(actualClients.isEmpty());
     }
@@ -73,7 +73,7 @@ public class ClientServiceImplTest {
         Client client = new Client(documentNumber, "", PF, 8);
         when(repository.findById(anyString())).thenReturn(Optional.of(client));
 
-        ClientDTO actualClients = assertDoesNotThrow(() -> service.get(documentNumber));
+        CustomerDTO actualClients = assertDoesNotThrow(() -> service.get(documentNumber));
 
         assertNotNull(actualClients);
         assertEquals("1234", actualClients.getDocumentNumber());
@@ -102,7 +102,7 @@ public class ClientServiceImplTest {
 
         when(repository.save(oldClient)).thenReturn(newClient);
 
-        ClientDTO request = new ClientDTO("01234567891012", "edit", PJ, 4);
+        CustomerDTO request = new CustomerDTO("01234567891012", "edit", PJ, 4);
 
         assertDoesNotThrow(() -> service.update(request, documentNumber));
 
@@ -117,7 +117,7 @@ public class ClientServiceImplTest {
     public void shouldUpdateWhenThereIsNoReferenceWithThisDocumentNumber() {
         String documentNumber = "98765432101";
 
-        ClientDTO request = new ClientDTO("12345678910", "new user", PF, 8);
+        CustomerDTO request = new CustomerDTO("12345678910", "new user", PF, 8);
         Client client = new Client("98765432101", "new user", PF, 8);
 
         when(repository.findById(documentNumber)).thenReturn(Optional.empty());
@@ -147,14 +147,14 @@ public class ClientServiceImplTest {
     @DisplayName("When creating PF client, should returns your id successfully")
     public void shouldCreatePFClient() {
         String documentNumber = "12345678910";
-        ClientDTO request = new ClientDTO(documentNumber, "Creating test", PF);
+        CustomerDTO request = new CustomerDTO(documentNumber, "Creating test", PF);
         Client created = new Client(documentNumber, "Creating test", PF, 7);
         CustomerEvent event = CustomerEventFactory.generateCustomer(created, CREATION);
 
         when(repository.findById(documentNumber)).thenReturn(Optional.empty());
         when(repository.save(any(Client.class))).thenReturn(created);
 
-        ClientDTO createdClient = assertDoesNotThrow(() -> service.create(request));
+        CustomerDTO createdClient = assertDoesNotThrow(() -> service.create(request));
 
         assertEquals(documentNumber, createdClient.getDocumentNumber());
         assertNull(createdClient.getFullName());
@@ -169,14 +169,14 @@ public class ClientServiceImplTest {
     public void shouldCreatePJClient() {
         String documentNumber = "12345678910123";
 
-        ClientDTO request = new ClientDTO(documentNumber, "Creating test", PJ);
+        CustomerDTO request = new CustomerDTO(documentNumber, "Creating test", PJ);
         Client created = new Client(documentNumber, "Creating test", PJ, 6);
         CustomerEvent event = CustomerEventFactory.generateCustomer(created, CREATION);
 
         when(repository.findById(documentNumber)).thenReturn(Optional.empty());
         when(repository.save(any(Client.class))).thenReturn(created);
 
-        ClientDTO createdClient = assertDoesNotThrow(() -> service.create(request));
+        CustomerDTO createdClient = assertDoesNotThrow(() -> service.create(request));
 
         assertEquals(documentNumber, createdClient.getDocumentNumber());
         assertNull(createdClient.getFullName());
@@ -192,8 +192,8 @@ public class ClientServiceImplTest {
         String documentNumberPf = "wrong-pf";
         String documentNumberPj = "wrong-pj";
 
-        ClientDTO requestPf = new ClientDTO(documentNumberPf, "Creating test PF", PF);
-        ClientDTO requestPj = new ClientDTO(documentNumberPj, "Creating test PJ", PJ);
+        CustomerDTO requestPf = new CustomerDTO(documentNumberPf, "Creating test PF", PF);
+        CustomerDTO requestPj = new CustomerDTO(documentNumberPj, "Creating test PJ", PJ);
 
         BadRequestException exceptionPf = assertThrows(BadRequestException.class, () -> service.create(requestPf));
         BadRequestException exceptionPj = assertThrows(BadRequestException.class, () -> service.create(requestPj));
@@ -207,7 +207,7 @@ public class ClientServiceImplTest {
     public void shouldThrowExceptionWhenUsingExistingDocumentNumber() {
         String documentNumberPf = "12345678910";
 
-        ClientDTO request = new ClientDTO(documentNumberPf, "Creating test PF", PF);
+        CustomerDTO request = new CustomerDTO(documentNumberPf, "Creating test PF", PF);
         when(repository.findById(anyString())).thenReturn(Optional.of(new Client()));
 
         ConflictException exception = assertThrows(ConflictException.class, () -> service.create(request));

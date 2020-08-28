@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service;
 import xyz.rpolnx.spring_bank.common.exceptions.ConflictException;
 import xyz.rpolnx.spring_bank.common.exceptions.NotFoundException;
 import xyz.rpolnx.spring_bank.common.model.dto.CustomerEvent;
-import xyz.rpolnx.spring_bank.common.model.enums.EventType;
 import xyz.rpolnx.spring_bank.customer.external.ClientPublisher;
 import xyz.rpolnx.spring_bank.customer.external.ClientRepository;
-import xyz.rpolnx.spring_bank.customer.model.dto.ClientDTO;
+import xyz.rpolnx.spring_bank.common.model.dto.CustomerDTO;
 import xyz.rpolnx.spring_bank.customer.model.entity.Client;
+import xyz.rpolnx.spring_bank.customer.model.factory.ClientDTOFactory;
 import xyz.rpolnx.spring_bank.customer.model.factory.CustomerEventFactory;
 import xyz.rpolnx.spring_bank.customer.service.ClientService;
 
@@ -29,22 +29,22 @@ public class ClientServiceImpl implements ClientService {
     private static final int MAX_SCORE_NUMBER = 10;
 
     @Override
-    public List<ClientDTO> getAll() {
+    public List<CustomerDTO> getAll() {
         return repository.findAll().stream()
-                .map(ClientDTO::of)
+                .map(ClientDTOFactory::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ClientDTO get(String documentNumber) {
+    public CustomerDTO get(String documentNumber) {
         return repository.findById(documentNumber)
-                .map(ClientDTO::of)
+                .map(ClientDTOFactory::fromEntity)
                 .orElseThrow(() -> new NotFoundException("Client not found"));
     }
 
     @Override
     @Transactional
-    public ClientDTO create(ClientDTO client) {
+    public CustomerDTO create(CustomerDTO client) {
         client.validate();
 
         Optional<Client> exists = repository.findById(client.getDocumentNumber());
@@ -63,12 +63,12 @@ public class ClientServiceImpl implements ClientService {
 
         publisher.handleClientEvent(event);
 
-        return ClientDTO.withOnlyDocumentNumber(created.getDocumentNumber());
+        return CustomerDTO.withOnlyDocumentNumber(created.getDocumentNumber());
     }
 
     @Override
     @Transactional
-    public void update(ClientDTO dto, String documentNumber) {
+    public void update(CustomerDTO dto, String documentNumber) {
         dto.validate();
 
         Client entity = repository.findById(documentNumber)
