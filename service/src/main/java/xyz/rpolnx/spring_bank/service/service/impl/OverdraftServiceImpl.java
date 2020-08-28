@@ -76,14 +76,15 @@ public class OverdraftServiceImpl implements OverdraftService {
         repository.findAllByAccountIdAndDeletedOnIsNull(account.getId())
                 .forEach(it -> {
                     if (!it.getScoreCategory().equals(category)) {
+
+                        Double newOverdraftLimit = nonNull(category.getOverdraftLimit()) ? category.getOverdraftLimit() : 0;
+                        Double oldOverdraftLimit = nonNull(it.getScoreCategory().getOverdraftLimit()) ? it.getScoreCategory().getOverdraftLimit() : 0;
+                        Double remaining = nonNull(it.getRemainingLimit()) ? it.getRemainingLimit() : 0;
+
+                        Double limitDifference = newOverdraftLimit - oldOverdraftLimit;
+                        double availableLimit = limitDifference + remaining;
+
                         it.setScoreCategory(category);
-
-                        Double overdraftLimit = nonNull(category.getOverdraftLimit()) ? category.getOverdraftLimit() : 0;
-                        Double currentLimit = nonNull(it.getScoreCategory().getOverdraftLimit()) ? it.getScoreCategory().getOverdraftLimit() : 0;
-
-                        Double limitDifference = overdraftLimit - currentLimit;
-                        double availableLimit = limitDifference + it.getRemainingLimit();
-
                         it.setRemainingLimit(availableLimit > 0 ? availableLimit : 0);
                         log.info("Overdraft created for accountId {}", event.getAccount().getId());
                     }
