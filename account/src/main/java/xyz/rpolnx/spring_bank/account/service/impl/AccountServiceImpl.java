@@ -53,7 +53,7 @@ public class AccountServiceImpl implements AccountService {
     public AccountDTO getByAccountId(Long accountId) {
         return repository.findById(accountId)
                 .map(AccountDTOFactory::fromEntity)
-                .map(it -> it.withCustomer(customerApi.get(it.getAccount().getClientId())))
+                .map(it -> it.withCustomer(proxyCustomerApi(it.getAccount().getClientId())))
                 .map(it -> it.withCards(creditCardApi.getSingle(it.getAccount().getNumber())))
                 .map(it -> it.withOverdrafts(overdraftApi.getSingle(it.getAccount().getNumber())))
                 .orElseThrow(() -> new NotFoundException("Account not found by id"));
