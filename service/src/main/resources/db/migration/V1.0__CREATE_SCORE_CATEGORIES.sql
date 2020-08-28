@@ -1,5 +1,5 @@
 CREATE TABLE "score_categories"(
-"id" serial PRIMARY KEY,
+"id" bigserial PRIMARY KEY,
 "lower_score_limit" integer NOT NULL,
 "higher_score_limit" integer NOT NULL,
 "credit_card_limit" float,

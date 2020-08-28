@@ -5,8 +5,11 @@ import xyz.rpolnx.spring_bank.common.model.entity.BaseEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import static javax.persistence.FetchType.EAGER;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity(name = "credit_cards")
@@ -14,7 +17,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 @With
-@Builder
 public class CreditCard extends BaseEntity {
     @Id
     private String number;
@@ -24,6 +26,8 @@ public class CreditCard extends BaseEntity {
     private String securityCode;
     private LocalDate expiration;
     private Double remainingLimit;
-    private Long scoreCategoriesId;
+
+    @ManyToOne(fetch = EAGER)
+    private ScoreCategory scoreCategory;
     private LocalDateTime deletedOn;
 }
