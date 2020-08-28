@@ -9,11 +9,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import xyz.rpolnx.spring_bank.common.exceptions.BadRequestException;
 import xyz.rpolnx.spring_bank.common.exceptions.ConflictException;
 import xyz.rpolnx.spring_bank.common.exceptions.NotFoundException;
+import xyz.rpolnx.spring_bank.common.model.dto.CustomerEvent;
 import xyz.rpolnx.spring_bank.customer.external.ClientPublisher;
 import xyz.rpolnx.spring_bank.customer.external.ClientRepository;
 import xyz.rpolnx.spring_bank.customer.model.dto.ClientDTO;
-import xyz.rpolnx.spring_bank.customer.model.dto.ClientEvent;
 import xyz.rpolnx.spring_bank.customer.model.entity.Client;
+import xyz.rpolnx.spring_bank.customer.model.factory.CustomerEventFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +25,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static xyz.rpolnx.spring_bank.common.model.enums.EventType.*;
 import static xyz.rpolnx.spring_bank.customer.mocks.ClientMock.generateClients;
-import static xyz.rpolnx.spring_bank.customer.model.PersonType.PF;
-import static xyz.rpolnx.spring_bank.customer.model.PersonType.PJ;
+import static xyz.rpolnx.spring_bank.customer.model.enums.CustomPersonType.PF;
+import static xyz.rpolnx.spring_bank.customer.model.enums.CustomPersonType.PJ;
 
 @ExtendWith(MockitoExtension.class)
 public class ClientServiceImplTest {
@@ -105,7 +106,7 @@ public class ClientServiceImplTest {
 
         assertDoesNotThrow(() -> service.update(request, documentNumber));
 
-        ClientEvent event = ClientEvent.of(newClient, UPDATE);
+        CustomerEvent event = CustomerEventFactory.generateCustomer(newClient, UPDATE);
 
         verify(repository, times(1)).save(newClient);
         verify(publisher).handleClientEvent(event);
@@ -124,7 +125,7 @@ public class ClientServiceImplTest {
 
         assertDoesNotThrow(() -> service.update(request, documentNumber));
 
-        ClientEvent event = ClientEvent.of(client, UPDATE);
+        CustomerEvent event = CustomerEventFactory.generateCustomer(client, UPDATE);
 
         verify(repository, times(1)).save(client);
         verify(publisher).handleClientEvent(event);
@@ -135,7 +136,7 @@ public class ClientServiceImplTest {
     public void shouldDeleteClient() {
         String documentNumber = "1234";
         Client client = new Client().withDocumentNumber(documentNumber);
-        ClientEvent event = ClientEvent.of(client, DELETE);
+        CustomerEvent event = CustomerEventFactory.generateCustomer(client, DELETE);
 
         assertDoesNotThrow(() -> service.delete(documentNumber));
         verify(repository, times(1)).delete(client);
@@ -148,7 +149,7 @@ public class ClientServiceImplTest {
         String documentNumber = "12345678910";
         ClientDTO request = new ClientDTO(documentNumber, "Creating test", PF);
         Client created = new Client(documentNumber, "Creating test", PF, 7);
-        ClientEvent event = ClientEvent.of(created, CREATION);
+        CustomerEvent event = CustomerEventFactory.generateCustomer(created, CREATION);
 
         when(repository.findById(documentNumber)).thenReturn(Optional.empty());
         when(repository.save(any(Client.class))).thenReturn(created);
@@ -170,7 +171,7 @@ public class ClientServiceImplTest {
 
         ClientDTO request = new ClientDTO(documentNumber, "Creating test", PJ);
         Client created = new Client(documentNumber, "Creating test", PJ, 6);
-        ClientEvent event = ClientEvent.of(created, CREATION);
+        CustomerEvent event = CustomerEventFactory.generateCustomer(created, CREATION);
 
         when(repository.findById(documentNumber)).thenReturn(Optional.empty());
         when(repository.save(any(Client.class))).thenReturn(created);

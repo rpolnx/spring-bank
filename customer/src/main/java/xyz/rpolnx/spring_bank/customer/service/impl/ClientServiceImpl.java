@@ -4,11 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import xyz.rpolnx.spring_bank.common.exceptions.ConflictException;
 import xyz.rpolnx.spring_bank.common.exceptions.NotFoundException;
+import xyz.rpolnx.spring_bank.common.model.dto.CustomerEvent;
+import xyz.rpolnx.spring_bank.common.model.enums.EventType;
 import xyz.rpolnx.spring_bank.customer.external.ClientPublisher;
 import xyz.rpolnx.spring_bank.customer.external.ClientRepository;
 import xyz.rpolnx.spring_bank.customer.model.dto.ClientDTO;
-import xyz.rpolnx.spring_bank.customer.model.dto.ClientEvent;
 import xyz.rpolnx.spring_bank.customer.model.entity.Client;
+import xyz.rpolnx.spring_bank.customer.model.factory.CustomerEventFactory;
 import xyz.rpolnx.spring_bank.customer.service.ClientService;
 
 import javax.transaction.Transactional;
@@ -57,7 +59,7 @@ public class ClientServiceImpl implements ClientService {
 
         Client created = repository.save(entity);
 
-        ClientEvent event = ClientEvent.of(created, CREATION);
+        CustomerEvent event = CustomerEventFactory.generateCustomer(created, CREATION);
 
         publisher.handleClientEvent(event);
 
@@ -76,7 +78,7 @@ public class ClientServiceImpl implements ClientService {
 
         Client updated = repository.save(updatedEntity);
 
-        ClientEvent event = ClientEvent.of(updated, UPDATE);
+        CustomerEvent event = CustomerEventFactory.generateCustomer(updated, UPDATE);
 
         publisher.handleClientEvent(event);
     }
@@ -87,7 +89,7 @@ public class ClientServiceImpl implements ClientService {
 
         repository.delete(client);
 
-        ClientEvent event = ClientEvent.of(client, DELETE);
+        CustomerEvent event = CustomerEventFactory.generateCustomer(client, DELETE);
 
         publisher.handleClientEvent(event);
     }

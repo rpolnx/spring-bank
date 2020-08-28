@@ -1,6 +1,6 @@
 package xyz.rpolnx.spring_bank.customer.mocks;
 
-import xyz.rpolnx.spring_bank.customer.model.PersonType;
+import xyz.rpolnx.spring_bank.customer.model.enums.CustomPersonType;
 import xyz.rpolnx.spring_bank.customer.model.entity.Client;
 
 import java.util.ArrayList;
@@ -16,8 +16,8 @@ public class ClientMock {
     }
 
     private static Client generateClient(int position, int max) {
-        int typePositionRandom = (int) (Math.random() * PersonType.values().length);
-        PersonType type = PersonType.values()[typePositionRandom];
+        int typePositionRandom = (int) (Math.random() * CustomPersonType.values().length);
+        CustomPersonType type = CustomPersonType.values()[typePositionRandom];
 
         int randomScore = (int) (Math.random() * max);
 

@@ -2,7 +2,7 @@ package xyz.rpolnx.spring_bank.customer.model.entity;
 
 import lombok.*;
 import xyz.rpolnx.spring_bank.common.model.entity.BaseEntity;
-import xyz.rpolnx.spring_bank.customer.model.PersonType;
+import xyz.rpolnx.spring_bank.customer.model.enums.CustomPersonType;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -20,10 +20,10 @@ public class Client extends BaseEntity {
     private String documentNumber;
     private String fullName;
     @Enumerated(EnumType.STRING)
-    private PersonType personType;
+    private CustomPersonType personType;
     private Integer score;
 
-    public Client withNewValues(String fullName, PersonType personType, Integer score) {
+    public Client withNewValues(String fullName, CustomPersonType personType, Integer score) {
         this.fullName = fullName;
         this.personType = personType;
         this.score = score;

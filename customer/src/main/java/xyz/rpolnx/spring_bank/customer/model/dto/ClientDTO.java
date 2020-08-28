@@ -3,7 +3,7 @@ package xyz.rpolnx.spring_bank.customer.model.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import xyz.rpolnx.spring_bank.common.exceptions.BadRequestException;
-import xyz.rpolnx.spring_bank.customer.model.PersonType;
+import xyz.rpolnx.spring_bank.customer.model.enums.CustomPersonType;
 import xyz.rpolnx.spring_bank.customer.model.entity.Client;
 
 import javax.validation.constraints.NotEmpty;
@@ -25,7 +25,7 @@ public class ClientDTO {
     @NotEmpty
     private String fullName;
     @NotNull
-    private PersonType personType;
+    private CustomPersonType personType;
     private Integer score;
 
     public ClientDTO(Client client) {
@@ -35,7 +35,7 @@ public class ClientDTO {
         this.score = client.getScore();
     }
 
-    public ClientDTO(String documentNumber, String fullName, PersonType personType) {
+    public ClientDTO(String documentNumber, String fullName, CustomPersonType personType) {
         this.documentNumber = documentNumber;
         this.fullName = fullName;
         this.personType = personType;
