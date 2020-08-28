@@ -5,6 +5,7 @@ import xyz.rpolnx.spring_bank.common.model.entity.BaseEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity(name = "overdrafts")
@@ -14,8 +15,8 @@ import javax.persistence.Id;
 @With
 public class Overdraft extends BaseEntity {
     @Id
-    private String id;
     private Long accountId;
     private Double remainingLimit;
     private Long scoreCategoriesId;
+    private LocalDateTime deletedOn;
 }

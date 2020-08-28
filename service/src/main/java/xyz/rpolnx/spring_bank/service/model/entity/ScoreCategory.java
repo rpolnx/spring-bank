@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @With
 public class ScoreCategory extends BaseEntity {
     @Id
-    private Long id;
+    private Integer id;
     @NotNull
     private Integer lowerScoreLimit;
     @NotNull
