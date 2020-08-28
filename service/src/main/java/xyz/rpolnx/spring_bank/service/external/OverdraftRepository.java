@@ -6,6 +6,7 @@ import xyz.rpolnx.spring_bank.service.model.entity.CreditCard;
 import xyz.rpolnx.spring_bank.service.model.entity.Overdraft;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface OverdraftRepository extends CrudRepository<Overdraft, Long> {
@@ -13,4 +14,6 @@ public interface OverdraftRepository extends CrudRepository<Overdraft, Long> {
     List<Overdraft> findAll();
 
     List<Overdraft> findAllByAccountIdAndDeletedOnIsNull(Long accountId);
+
+    Optional<Overdraft> findByAccountIdAndDeletedOnIsNull(Long accountId);
 }

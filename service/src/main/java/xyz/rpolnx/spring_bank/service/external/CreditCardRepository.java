@@ -4,7 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import xyz.rpolnx.spring_bank.service.model.entity.CreditCard;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Repository

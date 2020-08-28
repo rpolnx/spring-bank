@@ -8,6 +8,7 @@ import xyz.rpolnx.spring_bank.common.model.dto.AccountEvent;
 import xyz.rpolnx.spring_bank.common.model.dto.CustomerEvent;
 import xyz.rpolnx.spring_bank.common.util.RandomGeneratorUtils;
 import xyz.rpolnx.spring_bank.service.external.CreditCardRepository;
+import xyz.rpolnx.spring_bank.service.model.dto.CreditCardDTO;
 import xyz.rpolnx.spring_bank.service.model.entity.CreditCard;
 import xyz.rpolnx.spring_bank.service.model.entity.ScoreCategory;
 import xyz.rpolnx.spring_bank.service.model.factory.CreditCardBuilder;
@@ -16,6 +17,8 @@ import xyz.rpolnx.spring_bank.service.service.ScoreCategoryService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
@@ -31,6 +34,20 @@ public class CreditCardServiceImpl implements CreditCardService {
     private static final String CARD_BRAND_PREFIX = "9";
     private static final String CARD_BRAND_NAME = "My brand";
     private static final LocalDate expiration = LocalDate.now().plusYears(5);
+
+    @Override
+    public List<CreditCardDTO> getAll() {
+        return repository.findAll().stream()
+                .map(CreditCardDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CreditCardDTO> getByAccountId(Long accountId) {
+        return repository.findAllByAccountIdAndDeletedOnIsNull(accountId).stream()
+                .map(CreditCardDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
 
     @Override
     @Transactional
