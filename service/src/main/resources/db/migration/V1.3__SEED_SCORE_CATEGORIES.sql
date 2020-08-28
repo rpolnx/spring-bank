@@ -8,4 +8,4 @@ INSERT INTO "score_categories"(lower_score_limit, higher_score_limit, credit_car
 VALUES (6, 8, 2000, 2000);
 
 INSERT INTO "score_categories"(lower_score_limit, higher_score_limit, credit_card_limit, overdraft_limit)
-VALUES (9, -1, 15000, 5000);
+VALUES (9, 10, 15000, 5000);

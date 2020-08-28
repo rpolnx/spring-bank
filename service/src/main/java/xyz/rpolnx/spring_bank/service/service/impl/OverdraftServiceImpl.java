@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import xyz.rpolnx.spring_bank.common.exceptions.NotFoundException;
 import xyz.rpolnx.spring_bank.common.model.dto.AccountEvent;
 import xyz.rpolnx.spring_bank.common.model.dto.CustomerEvent;
 import xyz.rpolnx.spring_bank.service.external.OverdraftRepository;
-import xyz.rpolnx.spring_bank.service.model.dto.OverdraftDTO;
+import xyz.rpolnx.spring_bank.common.model.dto.integration.OverdraftDTO;
 import xyz.rpolnx.spring_bank.service.model.entity.Overdraft;
 import xyz.rpolnx.spring_bank.service.model.entity.ScoreCategory;
+import xyz.rpolnx.spring_bank.service.model.factory.OverdraftDTOFactory;
 import xyz.rpolnx.spring_bank.service.service.OverdraftService;
 import xyz.rpolnx.spring_bank.service.service.ScoreCategoryService;
 
@@ -30,15 +30,15 @@ public class OverdraftServiceImpl implements OverdraftService {
     @Override
     public List<OverdraftDTO> getAll() {
         return repository.findAll().stream()
-                .map(OverdraftDTO::fromEntity)
+                .map(OverdraftDTOFactory::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public OverdraftDTO getByAccountId(Long accountId) {
-        return repository.findByAccountIdAndDeletedOnIsNull(accountId)
-                .map(OverdraftDTO::fromEntity)
-                .orElseThrow(() -> new NotFoundException("Overdraft not found for this accountID"));
+    public List<OverdraftDTO> getByAccountId(Long accountId) {
+        return repository.findAllByAccountIdAndDeletedOnIsNull(accountId).stream()
+                .map(OverdraftDTOFactory::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -8,10 +8,11 @@ import xyz.rpolnx.spring_bank.common.model.dto.AccountEvent;
 import xyz.rpolnx.spring_bank.common.model.dto.CustomerEvent;
 import xyz.rpolnx.spring_bank.common.util.RandomGeneratorUtils;
 import xyz.rpolnx.spring_bank.service.external.CreditCardRepository;
-import xyz.rpolnx.spring_bank.service.model.dto.CreditCardDTO;
+import xyz.rpolnx.spring_bank.common.model.dto.integration.CreditCardDTO;
 import xyz.rpolnx.spring_bank.service.model.entity.CreditCard;
 import xyz.rpolnx.spring_bank.service.model.entity.ScoreCategory;
 import xyz.rpolnx.spring_bank.service.model.factory.CreditCardBuilder;
+import xyz.rpolnx.spring_bank.service.model.factory.CreditCardDTOFactory;
 import xyz.rpolnx.spring_bank.service.service.CreditCardService;
 import xyz.rpolnx.spring_bank.service.service.ScoreCategoryService;
 
@@ -38,14 +39,14 @@ public class CreditCardServiceImpl implements CreditCardService {
     @Override
     public List<CreditCardDTO> getAll() {
         return repository.findAll().stream()
-                .map(CreditCardDTO::fromEntity)
+                .map(CreditCardDTOFactory::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<CreditCardDTO> getByAccountId(Long accountId) {
         return repository.findAllByAccountIdAndDeletedOnIsNull(accountId).stream()
-                .map(CreditCardDTO::fromEntity)
+                .map(CreditCardDTOFactory::fromEntity)
                 .collect(Collectors.toList());
     }
 

@@ -1,4 +1,4 @@
-package xyz.rpolnx.spring_bank.service.model.dto;
+package xyz.rpolnx.spring_bank.common.model.dto.integration;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,9 +17,4 @@ public class CreditCardDTO {
     private String securityCode;
     private LocalDate expiration;
     private Double remainingLimit;
-
-    public static CreditCardDTO fromEntity(CreditCard creditCard) {
-        return new CreditCardDTO(creditCard.getNumber(), creditCard.getName(), creditCard.getBrandName(),
-                creditCard.getSecurityCode(), creditCard.getExpiration(), creditCard.getRemainingLimit());
-    }
 }

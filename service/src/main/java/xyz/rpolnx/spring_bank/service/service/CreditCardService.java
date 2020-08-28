@@ -1,7 +1,7 @@
 package xyz.rpolnx.spring_bank.service.service;
 
 import xyz.rpolnx.spring_bank.common.model.dto.AccountEvent;
-import xyz.rpolnx.spring_bank.service.model.dto.CreditCardDTO;
+import xyz.rpolnx.spring_bank.common.model.dto.integration.CreditCardDTO;
 
 import java.util.List;
 
