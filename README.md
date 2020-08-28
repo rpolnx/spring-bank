@@ -27,7 +27,7 @@ $ mvn clean install
 ### Subir o docker-compose com as dependências requeridas
 
 ```bash
-$ docker-compose up
+$ docker-compose up -d
 ```
 
 ### Rodar testes
@@ -47,40 +47,45 @@ $ java -jar service/*.jar
 ## Estrutura de pastas e Arquitetura
 
 ### Nível principal:
-- common   - módulo com utilitários, configurações e classes de DTO comuns
+- common   - módulo com utilitários, configurações e classes de DTO comuns à todos os módulos que o importam
 - customer - microsservico responsável pelo domínio do cliente 
 - account  - microsservico responsável pelo domínio da conta
 - service  - microsservico responsável pelo domínio de serviços (cartão e cheque especial)
 
 ### Estrutura interna:
-config - arquivos de configurações gerais da aplicação
+`config` - arquivos de configurações gerais da aplicação
 
-`controller` - camada de integração rest inicial
+`controller` - camada responsável pela integração rest de entrada
 
-`external` - camada responsável por toda comunicação externa (integração rest, publicar em filas e comunicar com banco)
+`external` - camada responsável por toda comunicação chamada externamente (integração de apis rest, publicação em filas , comunicação com banco de dados etc)
 
-`listener` - camada de integração de mensageria inicial
+`listener` - camada responsável pela integração de mensageria de entrada
 
-`model` - Entidades, objetos de valor, enums e suas classes auxiliares de suas criações
+`model` - Entidades, objetos de valor, enums e classes auxiliares de criações
 
 `service` - Camada responsável por realizar a regra de negócio
 
 
 ### Construção das tabelas
 - Customer MS
+
 ![Customer MS](https://github.com/rodrigorpo/spring-bank/blob/master/images/customer_ms.png)
 
 - Account MS
+
 ![Account MS](https://github.com/rodrigorpo/spring-bank/blob/master/images/account_ms.png)
 
 - Service MS
+
 ![Service MS](https://github.com/rodrigorpo/spring-bank/blob/master/images/service_ms.png)
 
 
 ### Desenho da arquitetura
+
 ![Arquitetura](https://github.com/rodrigorpo/spring-bank/blob/master/images/architecture-example.jpg)
 
 
 ## Considerações finais
 - A collection está em anexo - Insomnia
-- Os microsservicos customer, account e service estão rodando, respectivamente, nas portas 8080, 8081 e 8082
+- Rode os três módulos simultâneamente para conseguir testar a aplicação
+- Os microsserviços customer, account e service estão rodando, respectivamente, nas portas 8080, 8081 e 8082.
