@@ -16,20 +16,11 @@ public class AccountPublisherAdapter implements AccountPublisher {
     private final FanoutExchange accountExchange;
 
     @Override
-    public void publishAccountCreationEvent(AccountEvent accountEvent) {
+    public void publishAccountEvent(AccountEvent accountEvent) {
         log.info("Publishing message: {}", accountEvent);
 
         amqpTemplate.convertAndSend(accountExchange.getName(), "", accountEvent);
 
-        log.info("Finalizing message publish from accountEvent: {}", accountEvent.getAccount().getId());
-    }
-
-    @Override
-    public void publishAccountUpdateEvent(AccountEvent accountEvent) {
-        log.info("Publishing message: {}", accountEvent);
-
-        amqpTemplate.convertAndSend(accountExchange.getName(), "", accountEvent);
-
-        log.info("Finalizing message publish from accountEvent: {}", accountEvent.getAccount().getId());
+        log.info("Finalizing message publisher from accountEvent: {}", accountEvent.getAccount().getId());
     }
 }

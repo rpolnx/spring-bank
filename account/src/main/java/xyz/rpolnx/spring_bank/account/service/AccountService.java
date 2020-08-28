@@ -6,11 +6,11 @@ import xyz.rpolnx.spring_bank.common.model.dto.CustomerEvent;
 import java.util.List;
 
 public interface AccountService {
-    void createAccount(CustomerEvent service);
+    void createAccount(CustomerEvent event);
 
-    void updateAccount(CustomerEvent service);
+    void updateAccount(CustomerEvent event);
 
-    void deleteAccount(CustomerEvent customerEvent);
+    void deleteAccount(CustomerEvent event);
 
     List<AccountDTO> getAll();
 

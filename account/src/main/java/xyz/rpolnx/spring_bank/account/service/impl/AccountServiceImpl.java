@@ -70,7 +70,7 @@ public class AccountServiceImpl implements AccountService {
 
         AccountEvent accountEvent = AccountEventFactory.generateEvent(saved, event);
 
-        publisher.publishAccountCreationEvent(accountEvent);
+        publisher.publishAccountEvent(accountEvent);
 
         saved.setStatus(AccountStatus.ACTIVE);
     }
@@ -90,7 +90,7 @@ public class AccountServiceImpl implements AccountService {
 
         AccountEvent accountEvent = AccountEventFactory.generateEvent(updated, event);
 
-        publisher.publishAccountUpdateEvent(accountEvent);
+        publisher.publishAccountEvent(accountEvent);
 
         updated.setStatus(AccountStatus.ACTIVE);
     }
@@ -103,7 +103,7 @@ public class AccountServiceImpl implements AccountService {
                 .ifPresentOrElse(it -> {
                             it.setStatus(AccountStatus.INACTIVE);
                             AccountEvent accountEvent = AccountEventFactory.generateEvent(it, event);
-                            publisher.publishAccountUpdateEvent(accountEvent);
+                            publisher.publishAccountEvent(accountEvent);
                         },
                         () -> log.info("ClientId {}", event.getCustomer().getId())
                 );

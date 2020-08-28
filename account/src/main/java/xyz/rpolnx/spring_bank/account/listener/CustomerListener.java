@@ -5,9 +5,11 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
-import xyz.rpolnx.spring_bank.common.model.dto.CustomerEvent;
 import xyz.rpolnx.spring_bank.account.model.enums.CustomerEventHandler;
 import xyz.rpolnx.spring_bank.account.service.AccountService;
+import xyz.rpolnx.spring_bank.common.model.dto.CustomerEvent;
+
+import static java.util.Objects.isNull;
 
 @Component
 @RequiredArgsConstructor
@@ -20,6 +22,11 @@ public class CustomerListener {
         log.info("Consuming message from customer queue: {}", event);
 
         CustomerEventHandler customerEventHandler = CustomerEventHandler.fromEventType(event.getType());
+
+        if (isNull(customerEventHandler)) {
+            log.error("Unknown event type for message: {}", event);
+            return;
+        }
 
         customerEventHandler.getCallable().accept(service, event);
 
