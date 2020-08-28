@@ -77,15 +77,15 @@ public class CreditCardServiceImpl implements CreditCardService {
         repository.findAllByAccountIdAndDeletedOnIsNull(event.getAccount().getId())
                 .forEach(it -> {
                     if (!it.getScoreCategory().equals(category)) {
-                        it.setScoreCategory(category);
-
                         Double newCreditCardLimit = nonNull(category.getCreditCardLimit()) ? category.getCreditCardLimit() : 0;
                         Double oldCreditCardLimit = nonNull(it.getScoreCategory().getCreditCardLimit()) ? it.getScoreCategory().getCreditCardLimit() : 0;
+                        Double remaining = nonNull(it.getRemainingLimit()) ? it.getRemainingLimit() : 0;
 
                         Double limitDifference = newCreditCardLimit - oldCreditCardLimit;
-                        double availableLimit = limitDifference + it.getRemainingLimit();
+                        double availableLimit = limitDifference + remaining;
 
                         it.setRemainingLimit(availableLimit > 0 ? availableLimit : 0);
+                        it.setScoreCategory(category);
                         log.info("Credit card with id {} updated for accountId {}", it.getNumber(), event.getAccount().getId());
                     }
                 });
