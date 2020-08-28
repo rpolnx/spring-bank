@@ -5,7 +5,7 @@ import xyz.rpolnx.spring_bank.service.model.entity.CreditCard;
 
 public class CreditCardDTOFactory {
     public static CreditCardDTO fromEntity(CreditCard creditCard) {
-        return new CreditCardDTO(creditCard.getNumber(), creditCard.getName(), creditCard.getBrandName(),
+        return new CreditCardDTO(creditCard.getNumber(), creditCard.getAccountId(),creditCard.getName(), creditCard.getBrandName(),
                 creditCard.getSecurityCode(), creditCard.getExpiration(), creditCard.getRemainingLimit());
     }
 }

@@ -5,6 +5,6 @@ import xyz.rpolnx.spring_bank.service.model.entity.Overdraft;
 
 public class OverdraftDTOFactory {
     public static OverdraftDTO fromEntity(Overdraft overdraft) {
-        return new OverdraftDTO(overdraft.getRemainingLimit());
+        return new OverdraftDTO(overdraft.getAccountId(), overdraft.getRemainingLimit());
     }
 }

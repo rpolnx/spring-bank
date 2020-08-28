@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class OverdraftDTO {
+    private Long accountId;
     private Double remainingLimit;
 }

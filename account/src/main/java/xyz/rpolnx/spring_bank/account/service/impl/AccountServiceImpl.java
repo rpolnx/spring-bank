@@ -7,13 +7,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.rpolnx.spring_bank.account.external.AccountPublisher;
 import xyz.rpolnx.spring_bank.account.external.AccountRepository;
-import xyz.rpolnx.spring_bank.common.model.dto.AccountEvent;
+import xyz.rpolnx.spring_bank.account.model.dto.AccountDTO;
 import xyz.rpolnx.spring_bank.account.model.entity.Account;
 import xyz.rpolnx.spring_bank.account.model.enums.AccountStatus;
 import xyz.rpolnx.spring_bank.account.model.enums.AccountType;
 import xyz.rpolnx.spring_bank.account.model.factory.AccountEventFactory;
 import xyz.rpolnx.spring_bank.account.service.AccountService;
+import xyz.rpolnx.spring_bank.common.model.dto.AccountEvent;
 import xyz.rpolnx.spring_bank.common.model.dto.CustomerEvent;
+
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static xyz.rpolnx.spring_bank.account.model.factory.AccountFactory.generateAccount;
@@ -71,8 +74,22 @@ public class AccountServiceImpl implements AccountService {
     public void deleteAccount(CustomerEvent event) {
         repository
                 .findFirstByClientIdAndAgencyAndStatusIn(event.getCustomer().getId(), agency, asList(AccountStatus.usableStatus()))
-                .ifPresentOrElse(it -> it.setStatus(AccountStatus.INACTIVE),
+                .ifPresentOrElse(it -> {
+                            it.setStatus(AccountStatus.INACTIVE);
+                            AccountEvent accountEvent = AccountEventFactory.generateEvent(it, event);
+                            publisher.publishAccountUpdateEvent(accountEvent);
+                        },
                         () -> log.info("ClientId {}", event.getCustomer().getId())
                 );
+    }
+
+    @Override
+    public List<AccountDTO> getAll() {
+        return null;
+    }
+
+    @Override
+    public AccountDTO getByAccountId(Long accountId) {
+        return null;
     }
 }
