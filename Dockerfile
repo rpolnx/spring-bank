@@ -4,4 +4,4 @@ COPY target/*.jar ./app.jar
 COPY logback-spring.xml .
 COPY wait-for-it.sh .
 
-ENTRYPOINT java -jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
