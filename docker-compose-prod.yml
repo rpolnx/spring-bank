@@ -1,0 +1,63 @@
+version: '3.7'
+
+services:
+  postgres:
+    container_name: postgres-bank
+    image: postgres:12.4-alpine
+    environment:
+      POSTGRES_USER: ${PG_ROOT_USER}
+      POSTGRES_PASSWORD: ${PG_ROOT_PASS}
+      POSTGRES_DATABASE: postgres
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    restart: always
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBIT_MQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_MQ_PASS}
+      RABBITMQ_DEFAULT_VHOST: ${RABBIT_MQ_VHOST}
+    ports:
+      - 5672:5672
+      - 15672:15672
+    restart: always
+
+  customer:
+    image: rpolnx/customer:${CURRENT_VERSION}
+    restart: always
+    ports:
+      - 8000-8010:8080
+    depends_on:
+      - postgres
+      - rabbitmq
+    command: >
+      sh -c "./wait-for-it.sh postgres:5432 &&
+             ./wait-for-it.sh rabbitmq:5672"
+
+  account:
+    image: rpolnx/account:${CURRENT_VERSION}
+    restart: always
+    ports:
+      - 9000-9010:8081
+    depends_on:
+      - postgres
+      - rabbitmq
+    command: >
+      sh -c "./wait-for-it.sh postgres:5432 &&
+             ./wait-for-it.sh rabbitmq:5672"
+
+  service:
+    image: rpolnx/service:${CURRENT_VERSION}
+    restart: always
+    ports:
+      - 10000-10010:8082
+    depends_on:
+      - postgres
+      - rabbitmq
+    command: >
+      sh -c "./wait-for-it.sh postgres:5432 &&
+             ./wait-for-it.sh rabbitmq:5672"
