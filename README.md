@@ -1,42 +1,40 @@
 # Spring Bank Challenge
 
-## Introdução
-Esse projeto faz parte de um desafio de uma aplicação de microsservicos para criar um sistema de banco. 
-Algumas das regras são sua construção em java, uso de microsserviços, utilização de processamento assíncrono, 
-tratamento de erros, uso de filas e boas práticas de código.
+## Introduction
+    This project was a challenge to build a system that simulates a bank using microservice architecture. Some of the rules are to build it using java, microservices, async processing, error's handler, queue and good code practice.
 
-## Tecnologias
+## Technologies
 
-- Java 11 com springboot versão 2.3.3
+- Java 11 using springboot version 2.3.3
 - PostgreSQL
-- RabbitMQ como mensageria
-- Feign para integração REST
-- Flyway para controle de migrations
-- Logstash para controle de log
-- Testes unitários e integrados spring-test, mockito e junit 5
+- RabbitMQ as message broker system
+- Feign - REST client
+- Flyway - migration handler
+- Logback - log ouput format
+- Unit and integrated tests using spring-test, mockito e junit 5
 - Docker e Docker-compose
 
 ## Setup
 
-### Instalar dependências
+### Dependencies
 
 ```bash
 $ mvn clean install
 ```
 
-### Subir o docker-compose com as dependências requeridas
+### Docker Stack
 
 ```bash
 $ docker-compose up -d
 ```
 
-### Rodar testes
+### Run tests
 
 ```bash
 $ mvn test
 ```
 
-### Rodar aplicação (referência da pasta raíz)
+### Run application (context is from rootfolder)
 
 ```bash
 $ java -jar customer/*.jar 
@@ -44,48 +42,48 @@ $ java -jar account/*.jar
 $ java -jar service/*.jar
 ```
 
-## Estrutura de pastas e Arquitetura
+# Folder structure and architecture
 
-### Nível principal:
-- common   - módulo com utilitários, configurações e classes de DTO comuns à todos os módulos que o importam
-- customer - microsservico responsável pelo domínio do cliente 
-- account  - microsservico responsável pelo domínio da conta
-- service  - microsservico responsável pelo domínio de serviços (cartão e cheque especial)
+## Modules Structure:
+- common   - utilities, configuration, DTO common classes
+- customer - microservice responsible for customer domain 
+- account  - microservice responsible for account domain
+- service  - microservice responsible for others bank services (credit/debit card, overdraft limit etc)
 
-### Estrutura interna:
-`config` - arquivos de configurações gerais da aplicação
+## Internal structure:
+`config` - application config files
 
-`controller` - camada responsável pela integração rest de entrada
+`controller` - REST in/out data controller and basic valitation
 
-`external` - camada responsável por toda comunicação chamada externamente (integração de apis rest, publicação em filas , comunicação com banco de dados etc)
+`external` - External communication: Message out, repositories adapters, rest integration
 
-`listener` - camada responsável pela integração de mensageria de entrada
+`listener` - Message in data controller from queues
 
-`model` - Entidades, objetos de valor, enums e classes auxiliares de criações
+`model` - Value objects, models, entities
 
-`service` - Camada responsável por realizar a regra de negócio
-
-
-### Construção das tabelas
-- Customer MS
-
-![Customer MS](https://github.com/rodrigorpo/spring-bank/blob/master/images/customer_ms.png)
-
-- Account MS
-
-![Account MS](https://github.com/rodrigorpo/spring-bank/blob/master/images/account_ms.png)
-
-- Service MS
-
-![Service MS](https://github.com/rodrigorpo/spring-bank/blob/master/images/service_ms.png)
+`service` - Business layer
 
 
-### Desenho da arquitetura
+## Database relationship
+- Customer microservice
 
-![Arquitetura](https://github.com/rodrigorpo/spring-bank/blob/master/images/architecture-example.jpg)
+![Customer microservice](https://github.com/rodrigorpo/spring-bank/blob/master/images/customer_ms.png)
+
+- Account microservice
+
+![Account microservice](https://github.com/rodrigorpo/spring-bank/blob/master/images/account_ms.png)
+
+- Service microservice
+
+![Service microservice](https://github.com/rodrigorpo/spring-bank/blob/master/images/service_ms.png)
 
 
-## Considerações finais
-- A collection está em anexo - Insomnia
-- Rode os três módulos simultâneamente para conseguir testar a aplicação
-- Os microsserviços customer, account e service estão rodando, respectivamente, nas portas 8080, 8081 e 8082.
+## Picture from Architecture
+
+![Architecture](https://github.com/rodrigorpo/spring-bank/blob/master/images/architecture-example.jpg)
+
+
+# Final considerations
+- Collection from insomnia rest client routes on folder collections
+- Run the three microservices and docker-compose stack simultaneously to test application
+- The customer, account and service microservices are running on ports 8080, 8081 and 8082 respectively.
